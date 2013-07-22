@@ -32,7 +32,6 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.n52.wps.io.data.IData;
 import org.n52.wps.io.datahandler.parser.GML2BasicParser;
-import org.n52.wps.io.datahandler.parser.GML3BasicParser;
 import org.n52.wps.server.ExceptionReport;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
