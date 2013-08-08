@@ -9,7 +9,7 @@ More information available at the [52°North Geoprocessing Community](http://52n
 
 There are two steps which you need to fulfill
 
-1. Copy the resulting jar to (WPS-deployment-direcotry)/WEB-INF/lib
+1. Copy the resulting jar to (WPS-deployment-directory)/WEB-INF/lib
 2. Add your new Algorithms to the WPS config (in (WPS-deployment-directory)/config/wps_config.xml)
 
 The second step could look like:
@@ -25,3 +25,11 @@ The second step could look like:
 </Repository>
 ...
 ```
+
+### Only if you are using WPS 3.2.0 and later
+
+If you add the fully qualified name of you algorithm to the file:
+
+/META-INF/services/org.n52.wps.server.IAlgorithm
+
+and drop the jar to (WPS-deployment-directory)/WEB-INF/lib, your Algorithm will be added to the WPS automatically.
