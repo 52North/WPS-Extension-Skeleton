@@ -22,7 +22,11 @@ http://maven.apache.org/xsd/maven-4.0.0.xsd">
 			<url>http://www.apache.org/licenses/LICENSE-2.0</url>
 		</license>
 	</licenses>
-
+	<scm>
+		<connection>scm:git:git://github.com/52North/WPS-Extension-Skeleton.git</connection>
+		<url>https://github.com/52North/WPS-Extension-Skeleton</url>
+		<developerConnection>scm:git:ssh://git@github.com/52North/WPS-Extension-Skeleton.git</developerConnection>
+	</scm>
 	<dependencies>
 		<dependency>
 			<groupId>org.n52.wps</groupId>
