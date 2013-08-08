@@ -31,7 +31,7 @@ import java.util.Map;
 import org.junit.Assert;
 import org.junit.Test;
 import org.n52.wps.io.data.IData;
-import org.n52.wps.io.datahandler.parser.GML3BasicParser;
+import org.n52.wps.io.datahandler.parser.GML2BasicParser;
 import org.n52.wps.server.ExceptionReport;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -61,8 +61,8 @@ public class AnnotatedExtensionAlgorithmTest {
 	private Map<String, List<IData>> readData() {
 		InputStream inputStream = getClass().getResourceAsStream("Layer1.gml");
 		                
-		GML3BasicParser parser = new GML3BasicParser();
-		IData layer1 = parser.parse(inputStream, "text/xml; subtype=gml/3.0.0", null);
+		GML2BasicParser parser = new GML2BasicParser();
+		IData layer1 = parser.parse(inputStream, "text/xml; subtype=gml/2.1.2", null);
 		                
 		List<IData> inputDataList1 = new ArrayList<IData>();
 		inputDataList1.add(layer1);
