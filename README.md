@@ -1,11 +1,10 @@
 # 52°North WPS Skeleton Project
 
-You can use this project skeleton to develop WPS extension
-Processes (Algorithms), Parsers and Generators.
+You can use this project skeleton to develop WPS extension processes (algorithms), parsers for process inputs and generators of process outputs using Java.
 
-More information available at the [52°North Geoprocessing Community](http://52north.org/geoprocessing).
+More information is available at the [52°North Geoprocessing Community](http://52north.org/geoprocessing).
 
-## Adding an Algorithm to your WPS instance
+## Adding a Java Algorithm to your WPS instance
 
 There are two steps which you need to fulfill
 
@@ -30,6 +29,6 @@ The second step could look like:
 
 If you add the fully qualified name of you algorithm to the file:
 
-/META-INF/services/org.n52.wps.server.IAlgorithm
+``/META-INF/services/org.n52.wps.server.IAlgorithm``
 
-and drop the jar to (WPS-deployment-directory)/WEB-INF/lib, your Algorithm will be added to the WPS automatically.
+and drop the jar to (WPS-deployment-directory)/WEB-INF/lib, your algorithm will be added to the WPS automatically.
