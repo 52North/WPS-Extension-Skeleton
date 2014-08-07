@@ -28,7 +28,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.n52.wps.io.data.IData;
-import org.n52.wps.io.data.binding.complex.GTVectorDataBinding;
+import org.n52.wps.io.data.binding.literal.LiteralStringBinding;
 import org.n52.wps.server.AbstractSelfDescribingAlgorithm;
 import org.n52.wps.server.ExceptionReport;
 
@@ -40,19 +40,19 @@ import org.n52.wps.server.ExceptionReport;
  */
 public class ExtensionAlgorithm extends AbstractSelfDescribingAlgorithm {
 
-	static final String INPUT = "inputLayer";
+	static final String INPUT = "inputString";
 	static final String OUTPUT = "resultOutput";
 
 	public Class<?> getInputDataType(String identifier) {
 		if (identifier.equals(INPUT)) {
-			return GTVectorDataBinding.class;
+			return LiteralStringBinding.class;
 		}
 		return null;
 	}
 
 	public Class<?> getOutputDataType(String identifier) {
 		if (identifier.equals(OUTPUT)) {
-			return GTVectorDataBinding.class;
+			return LiteralStringBinding.class;
 		}
 		return null;
 	}

@@ -22,7 +22,6 @@
  */
 package org.n52.wps.extension;
 
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -31,7 +30,7 @@ import java.util.Map;
 import org.junit.Assert;
 import org.junit.Test;
 import org.n52.wps.io.data.IData;
-import org.n52.wps.io.datahandler.parser.GML2BasicParser;
+import org.n52.wps.io.data.binding.literal.LiteralStringBinding;
 import org.n52.wps.server.ExceptionReport;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -59,13 +58,11 @@ public class AnnotatedExtensionAlgorithmTest {
 	}
 
 	private Map<String, List<IData>> readData() {
-		InputStream inputStream = getClass().getResourceAsStream("Layer1.gml");
-		                
-		GML2BasicParser parser = new GML2BasicParser();
-		IData layer1 = parser.parse(inputStream, "text/xml; subtype=gml/2.1.2", null);
+
+		LiteralStringBinding stringBinding = new LiteralStringBinding("input");
 		                
 		List<IData> inputDataList1 = new ArrayList<IData>();
-		inputDataList1.add(layer1);
+		inputDataList1.add(stringBinding);
 		
 		Map<String,List<IData>> map = new HashMap<String, List<IData>>();
 		map.put(ExtensionAlgorithm.INPUT, inputDataList1);
