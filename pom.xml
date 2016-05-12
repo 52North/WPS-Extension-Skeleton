@@ -8,8 +8,8 @@
 	</parent>
 
 	<groupId>org.n52.wps-extension</groupId>
-	<artifactId>process-extensions</artifactId>
-	<version>0.0.2-SNAPSHOT</version>
+	<artifactId>testbed12-processes</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
 
 	<inceptionYear>2013</inceptionYear>
 	<url>http://52north.org</url>
@@ -29,13 +29,33 @@
 		<dependency>
 			<groupId>org.n52.wps</groupId>
 			<artifactId>52n-wps-io</artifactId>
-			<version>3.2.0</version>
+			<version>4.0.0-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>org.n52.wps</groupId>
+			<artifactId>52n-wps-io-impl</artifactId>
+			<version>4.0.0-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>org.n52.wps</groupId>
+			<artifactId>52n-wps-io-geotools</artifactId>
+			<version>4.0.0-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>org.n52.wps</groupId>
 			<artifactId>52n-wps-algorithm</artifactId>
-			<version>3.2.0</version>
+			<version>4.0.0-SNAPSHOT</version>
 		</dependency>
+		<dependency>
+			<groupId>org.n52.wps</groupId>
+			<artifactId>52n-wps-server</artifactId>
+			<version>4.0.0-SNAPSHOT</version>
+		</dependency>		
+<!-- 		<dependency> -->
+<!-- 			<groupId>org.apache.httpcomponents</groupId> -->
+<!-- 			<artifactId>httpcomponents-client</artifactId> -->
+<!-- 			<version>4.2.1</version> -->
+<!-- 		</dependency> -->
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>

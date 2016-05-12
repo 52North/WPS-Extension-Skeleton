@@ -1,0 +1,114 @@
+<soap:Envelope xmlns:soap='http://www.w3.org/2003/05/soap-envelope'>
+	<soap:Header />
+	<soap:Body><?xml version="1.0" encoding="UTF-8"?>
+		<wfs:FeatureCollection xmlns:xs="http://www.w3.org/2001/XMLSchema"
+			xmlns:wfs="http://www.opengis.net/wfs/2.0" xmlns:gml="http://www.opengis.net/gml/3.2"
+			xmlns:testbed12="http://gci.asu.edu/testbed12" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+			numberMatched="47014" numberReturned="3" timeStamp="2016-05-04T07:50:04.762Z"
+			xsi:schemaLocation="http://www.opengis.net/wfs/2.0 http://polar.geodacenter.org:80/geoserver29/schemas/wfs/2.0/wfs.xsd http://www.opengis.net/gml/3.2 http://polar.geodacenter.org:80/geoserver29/schemas/gml/3.2.1/gml.xsd http://gci.asu.edu/testbed12 http://polar.geodacenter.org:80/geoserver29/testbed12/wfs?service=WFS&amp;version=2.0&amp;request=DescribeFeatureType&amp;typeName=testbed12%3Aus-roads">
+			<wfs:member>
+				<testbed12:us-roads gml:id="us-roads.1">
+					<testbed12:the_geom>
+						<gml:MultiCurve srsName="http://www.opengis.net/gml/srs/epsg.xml#404000"
+							srsDimension="2">
+							<gml:curveMember>
+								<gml:LineString>
+									<gml:posList>-166.3703 65.302498 -166.34584 65.283798
+										-166.35199 65.275177</gml:posList>
+								</gml:LineString>
+							</gml:curveMember>
+						</gml:MultiCurve>
+					</testbed12:the_geom>
+					<testbed12:FNODE_>1</testbed12:FNODE_>
+					<testbed12:TNODE_>2</testbed12:TNODE_>
+					<testbed12:LPOLY_>0</testbed12:LPOLY_>
+					<testbed12:RPOLY_>0</testbed12:RPOLY_>
+					<testbed12:LENGTH>0.041</testbed12:LENGTH>
+					<testbed12:ROADTRL020>1</testbed12:ROADTRL020>
+					<testbed12:FEATURE>Other Highway</testbed12:FEATURE>
+					<testbed12:NAME />
+					<testbed12:STATE_FIPS>02</testbed12:STATE_FIPS>
+					<testbed12:STATE>AK</testbed12:STATE>
+				</testbed12:us-roads>
+			</wfs:member>
+			<wfs:member>
+				<testbed12:us-roads gml:id="us-roads.2">
+					<testbed12:the_geom>
+						<gml:MultiCurve srsName="http://www.opengis.net/gml/srs/epsg.xml#404000"
+							srsDimension="2">
+							<gml:curveMember>
+								<gml:LineString>
+									<gml:posList>-166.35199 65.275177 -166.353546 65.273003
+										-166.36821 65.259087</gml:posList>
+								</gml:LineString>
+							</gml:curveMember>
+						</gml:MultiCurve>
+					</testbed12:the_geom>
+					<testbed12:FNODE_>2</testbed12:FNODE_>
+					<testbed12:TNODE_>3</testbed12:TNODE_>
+					<testbed12:LPOLY_>0</testbed12:LPOLY_>
+					<testbed12:RPOLY_>0</testbed12:RPOLY_>
+					<testbed12:LENGTH>0.023</testbed12:LENGTH>
+					<testbed12:ROADTRL020>2</testbed12:ROADTRL020>
+					<testbed12:FEATURE>Other Highway</testbed12:FEATURE>
+					<testbed12:NAME>State Route 131</testbed12:NAME>
+					<testbed12:STATE_FIPS>02</testbed12:STATE_FIPS>
+					<testbed12:STATE>AK</testbed12:STATE>
+				</testbed12:us-roads>
+			</wfs:member>
+			<wfs:member>
+				<testbed12:us-roads gml:id="us-roads.3">
+					<testbed12:the_geom>
+						<gml:MultiCurve srsName="http://www.opengis.net/gml/srs/epsg.xml#404000"
+							srsDimension="2">
+							<gml:curveMember>
+								<gml:LineString>
+									<gml:posList>-155.396027 66.006828 -155.407425 66.018394
+										-155.416626 66.029472 -155.424774 66.040085 -155.436478
+										66.047997 -155.448288 66.054543 -155.465866 66.058876
+										-155.48671 66.064621 -155.501053 66.067528 -155.50325
+										66.068016 -155.5065 66.069427 -155.512924 66.073616
+										-155.517166 66.076866 -155.52713 66.078354 -155.542679
+										66.080376 -155.561478 66.083794 -155.579147 66.087204
+										-155.587982 66.089134 -155.595795 66.089684 -155.607117
+										66.087982 -155.618591 66.084 -155.628891 66.080917 -155.636734
+										66.081009 -155.641205 66.081062 -155.646713 66.082497
+										-155.652115 66.085297 -155.658798 66.085831 -155.666489
+										66.088203 -155.675446 66.088303 -155.683289 66.088394
+										-155.692307 66.087578 -155.697968 66.086731 -155.709137
+										66.087311 -155.715668 66.090118 -155.727829 66.092545
+										-155.736526 66.096741 -155.74411 66.100937 -155.747284
+										66.103706 -155.753891 66.105606 -155.75943 66.106583
+										-155.766129 66.107109 -155.773911 66.108101 -155.782959
+										66.106827 -155.790802 66.106911 -155.796402 66.106972
+										-155.806473 66.107536 -155.816467 66.109009 -155.825348
+										66.110474 -155.832993 66.113747 -155.838486 66.115631
+										-155.845047 66.118431 -155.849319 66.121681 -155.851425
+										66.124435 -155.853378 66.129028 -155.85199 66.133583
+										-155.847244 66.137642 -155.838104 66.140289 -155.828995
+										66.142487 -155.822113 66.144691 -155.816284 66.148285
+										-155.812683 66.151909 -155.801315 66.154068 -155.789917
+										66.156693 -155.781937 66.158432 -155.772873 66.159714
+										-155.763794 66.160988 -155.75473 66.162262 -155.744354
+										66.16626 -155.739532 66.171234 -155.732559 66.174812
+										-155.726547 66.180695 -155.721786 66.184753 -155.713638
+										66.188782 -155.711182 66.191948</gml:posList>
+								</gml:LineString>
+							</gml:curveMember>
+						</gml:MultiCurve>
+					</testbed12:the_geom>
+					<testbed12:FNODE_>15</testbed12:FNODE_>
+					<testbed12:TNODE_>14</testbed12:TNODE_>
+					<testbed12:LPOLY_>0</testbed12:LPOLY_>
+					<testbed12:RPOLY_>0</testbed12:RPOLY_>
+					<testbed12:LENGTH>0.658</testbed12:LENGTH>
+					<testbed12:ROADTRL020>3</testbed12:ROADTRL020>
+					<testbed12:FEATURE>Other Highway</testbed12:FEATURE>
+					<testbed12:NAME />
+					<testbed12:STATE_FIPS>02</testbed12:STATE_FIPS>
+					<testbed12:STATE>AK</testbed12:STATE>
+				</testbed12:us-roads>
+			</wfs:member>
+		</wfs:FeatureCollection>
+	</soap:Body>
+</soap:Envelope>

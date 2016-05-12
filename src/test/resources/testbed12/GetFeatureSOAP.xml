@@ -1,0 +1,15 @@
+<soap:Envelope 
+	xmlns:soap='http://www.w3.org/2003/05/soap-envelope' 
+	xmlns:wfs='http://www.opengis.net/wfs/2.0'>
+	<soap:Header/>
+	<soap:Body>
+		<wfs:GetFeature 
+			service="WFS" 
+			version="2.0" 
+			resultType="results" 
+			outputFormat="application/gml+xml; version=3.2" 
+			count="3" >
+		<wfs:Query typeNames="us-roads"/>
+		</wfs:GetFeature>
+	</soap:Body>
+</soap:Envelope>
