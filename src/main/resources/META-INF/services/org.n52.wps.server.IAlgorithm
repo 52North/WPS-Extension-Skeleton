@@ -1,2 +1,8 @@
 testbed12.cmd.AsyncFacadeProcess
-testbed12.fo.MergePointByAttribute
+testbed12.fo.MergeFeaturesByAttribute
+testbed12.fo.MergePointsByAttribute
+testbed12.fo.DouglasPeuckerAlgorithm
+testbed12.fo.AreaScalingSimple
+testbed12.fo.AreaScalingRelative
+testbed12.fo.AreaFeatureRemoval
+testbed12.lsa.HootenannyConflation

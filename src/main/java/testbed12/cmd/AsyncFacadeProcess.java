@@ -25,25 +25,25 @@ import org.n52.wps.server.request.strategy.ReferenceInputStream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@Algorithm(version="1.0.0", abstrakt="Process acting as async facade for a WFS SOAP" )
+@Algorithm(version="1.0.0", abstrakt="Process acting as async facade for a SOAP endpoint" )
 public class AsyncFacadeProcess extends AbstractAnnotatedAlgorithm {
 
     private static final Logger log = LoggerFactory.getLogger(AsyncFacadeProcess.class);
 
     private XmlObject soapRequest;
-    private URI wfsURL;
+    private URI endpointURL;
 
     private XmlObject wfsResponse;
 
     @Execute
     public void echo() {
-        log.debug("Requesting WFS SOAP: {}", wfsURL);
+        log.debug("Requesting WFS SOAP: {}", endpointURL);
         
         String mimeType = "application/soap+xml";
         
         try {
 
-            ReferenceInputStream inputStream = httpPost(wfsURL.toString(), soapRequest.toString(), mimeType);
+            ReferenceInputStream inputStream = httpPost(endpointURL.toString(), soapRequest.toString(), mimeType);
             
             StringBuilder builder = new StringBuilder();
             
@@ -52,8 +52,7 @@ public class AsyncFacadeProcess extends AbstractAnnotatedAlgorithm {
             while((i = inputStream.read()) != -1){
                 builder.append((char)i);
             }
-            //TODO remove when fixed by ASU
-            String soapString = builder.toString().replace("<?xml version=\"1.0\" encoding=\"UTF-8\"?>", "");
+            String soapString = builder.toString();
                      
             wfsResponse = XmlObject.Factory.parse(soapString);
             
@@ -63,10 +62,10 @@ public class AsyncFacadeProcess extends AbstractAnnotatedAlgorithm {
             log.error(e.getMessage());
         }
 
-        log.debug("Finished requesting WFS SOAP");
+        log.debug("Finished requesting SOAP service.");
     }
 
-    @ComplexDataOutput(identifier = "wfs-response", binding = GenericXMLDataBinding.class)
+    @ComplexDataOutput(identifier = "soap-response", binding = GenericXMLDataBinding.class)
     public XmlObject getComplexOutput() {
         return wfsResponse;
     }
@@ -76,9 +75,9 @@ public class AsyncFacadeProcess extends AbstractAnnotatedAlgorithm {
         this.soapRequest = soapRequest;
     }
 
-    @LiteralDataInput(identifier = "wfs-url", minOccurs = 1, maxOccurs = 1)
-    public void setLiteralInput(URI wfsURL) {
-        this.wfsURL = wfsURL;
+    @LiteralDataInput(identifier = "endpoint-url", minOccurs = 1, maxOccurs = 1)
+    public void setLiteralInput(URI endpointURL) {
+        this.endpointURL = endpointURL;
     }
     
     /**

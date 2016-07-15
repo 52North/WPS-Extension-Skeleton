@@ -11,7 +11,7 @@ import org.n52.wps.algorithm.annotation.ComplexDataInput;
 import org.n52.wps.algorithm.annotation.ComplexDataOutput;
 import org.n52.wps.algorithm.annotation.Execute;
 import org.n52.wps.algorithm.annotation.LiteralDataInput;
-import org.n52.wps.algorithm.annotation.Metadata;
+import org.n52.wps.algorithm.annotation.AlgorithmMetadata;
 import org.n52.wps.io.data.binding.complex.GTVectorDataBinding;
 import org.n52.wps.server.AbstractAnnotatedAlgorithm;
 import org.opengis.feature.simple.SimpleFeature;
@@ -24,11 +24,13 @@ import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.index.quadtree.Quadtree;
 
 @Algorithm(
-        version = "0.1")
-@Metadata(role="http://www.opengis.net/spec/wps/2.0/def/process-profile/concept", href="http://52north.org/profileregistry/concept/generalization")
-public class MergePointByAttribute extends AbstractAnnotatedAlgorithm {
+        version = "0.0.1")
+@AlgorithmMetadata(
+        roles = { "http://www.opengis.net/spec/wps/2.0/def/process-profile/concept"},
+        hrefs = { "http://52north.github.io/wps-profileregistry/concept/generalization.html"})
+public class MergePointsByAttribute extends AbstractAnnotatedAlgorithm {
 
-    private static Logger LOGGER = LoggerFactory.getLogger(MergePointByAttribute.class);
+    private static Logger LOGGER = LoggerFactory.getLogger(MergePointsByAttribute.class);
 
     private FeatureCollection result;
 
@@ -96,7 +98,7 @@ public class MergePointByAttribute extends AbstractAnnotatedAlgorithm {
                 for (Iterator<SimpleFeature> iin = inEnvelope.iterator(); iin.hasNext();) {
                     SimpleFeature fiin = (SimpleFeature) iin.next();
                     Geometry giin = (Geometry) fiin.getDefaultGeometry();
-                    if (as.equals(fiin.getAttribute(classfield).toString().trim()) && (gs.distance(giin)<=distance)) {
+                    if (as.equals(fiin.getAttribute(classfield).toString().trim()) && (gs.distance(giin) <= distance)) {
                         gs = gs.union(giin);
                         qtree.remove(((Geometry) fiin.getDefaultGeometry()).getEnvelope().getEnvelopeInternal(), fiin);
                     }
