@@ -83,6 +83,7 @@ import com.vividsolutions.jts.geom.MultiLineString;
 import com.vividsolutions.jts.geom.MultiPolygon;
 import com.vividsolutions.jts.geom.Polygon;
 import com.vividsolutions.jts.simplify.DouglasPeuckerSimplifier;
+import com.vividsolutions.jts.simplify.TopologyPreservingSimplifier;
 
 @Algorithm(
         version = "1.0.0")
@@ -96,6 +97,8 @@ public class DouglasPeuckerAlgorithm extends AbstractAnnotatedAlgorithm {
 
     private Double percentage;
 
+    private Boolean preserveTopology;
+    
     private FeatureCollection result;
 
     private FeatureCollection data;
@@ -111,16 +114,23 @@ public class DouglasPeuckerAlgorithm extends AbstractAnnotatedAlgorithm {
 
     @ComplexDataInput(
             identifier = "data", binding = GTVectorDataBinding.class)
-    @ParameterMetadata(roles={"http://www.opengis.net/spec/wps/2.0/def/process/description/documentation"}, hrefs={"http://52north.github.io/wps-profileregistry/implementing/douglas-peucker.html#result"})
+    @ParameterMetadata(roles={"http://www.opengis.net/spec/wps/2.0/def/process/description/documentation"}, hrefs={"http://52north.github.io/wps-profileregistry/implementing/douglas-peucker.html#data"})
     public void setData(FeatureCollection data) {
         this.data = data;
     }
 
     @LiteralDataInput(
             identifier = "tolerance")
-    @ParameterMetadata(roles={"http://www.opengis.net/spec/wps/2.0/def/process/description/documentation"}, hrefs={"http://52north.github.io/wps-profileregistry/implementing/douglas-peucker.html#result"})
+    @ParameterMetadata(roles={"http://www.opengis.net/spec/wps/2.0/def/process/description/documentation"}, hrefs={"http://52north.github.io/wps-profileregistry/implementing/douglas-peucker.html#tolerance"})
     public void setTolerance(double tolerance) {
         this.tolerance = tolerance;
+    }
+    
+    @LiteralDataInput(
+            identifier = "preserve_topology")
+    @ParameterMetadata(roles={"http://www.opengis.net/spec/wps/2.0/def/process/description/documentation"}, hrefs={"http://52north.github.io/wps-profileregistry/implementing/douglas-peucker.html#preserve_topology"})
+    public void setPreserveTopology(boolean preserveTopology) {
+        this.preserveTopology = preserveTopology;
     }
 
     @Execute
@@ -145,7 +155,7 @@ public class DouglasPeuckerAlgorithm extends AbstractAnnotatedAlgorithm {
              */
             SimpleFeature feature = (SimpleFeature) ia.next();
             Geometry geometry = (Geometry) feature.getDefaultGeometry();
-            Geometry geometryBuffered = simplify(geometry, tolerance);
+            Geometry geometryBuffered = simplify(geometry, tolerance, preserveTopology);
 
             if (i == 1) {
                 CoordinateReferenceSystem crs = feature.getFeatureType().getCoordinateReferenceSystem();
@@ -175,9 +185,15 @@ public class DouglasPeuckerAlgorithm extends AbstractAnnotatedAlgorithm {
     }
 
     private Geometry simplify(Geometry in,
-            Double tolerance) {
-        Geometry out = DouglasPeuckerSimplifier.simplify(in, tolerance);
+            Double tolerance, boolean preserveTopology) {
+        Geometry out = null;
 
+        if(preserveTopology){
+            out = TopologyPreservingSimplifier.simplify(in, tolerance);
+        }else{
+            out = DouglasPeuckerSimplifier.simplify(in, tolerance);
+        }
+        
         if (in.getGeometryType().equals("MultiPolygon") && out.getGeometryType().equals("Polygon")) {
             MultiPolygon mp = (MultiPolygon) in;
             Polygon[] p = { (Polygon) out };
