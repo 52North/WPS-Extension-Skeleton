@@ -1,17 +1,30 @@
 package testbed12.lsa;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.n52.wps.commons.context.ExecutionContextFactory;
+import org.n52.wps.io.data.GenericFileData;
+import org.n52.wps.io.data.GenericFileDataWithGT;
 import org.n52.wps.io.data.IData;
 import org.n52.wps.io.data.binding.complex.GTVectorDataBinding;
-import org.n52.wps.io.data.binding.complex.PlainStringBinding;
+import org.n52.wps.io.data.binding.complex.GenericFileDataBinding;
+import org.n52.wps.io.data.binding.complex.GenericFileDataWithGTBinding;
 import org.n52.wps.io.data.binding.literal.LiteralDoubleBinding;
 import org.n52.wps.io.data.binding.literal.LiteralIntBinding;
 import org.n52.wps.io.data.binding.literal.LiteralStringBinding;
+import org.n52.wps.io.datahandler.parser.GTBinZippedSHPParser;
 import org.n52.wps.server.AbstractAlgorithm;
 import org.n52.wps.server.ExceptionReport;
+
+import net.opengis.wps.x100.OutputDefinitionType;
 
 public class HootenannyConflation extends AbstractAlgorithm {
 
@@ -31,11 +44,90 @@ public class HootenannyConflation extends AbstractAlgorithm {
         
         Map<String, IData> result = new HashMap<>();
         
+        IData input1 = input1List.get(0);
+        
+        if(!(input1 instanceof GenericFileDataBinding)){
+            return result;
+        }
+        
+        List<IData> input2List = inputData.get(INPUT2);
+        
         result.put(CONFLATION_OUTPUT, input1List.get(0));
         
-        String report = "Example report, output is equal to input1.";
+        String report = "";
         
-        result.put(CONFLATION_REPORT, new PlainStringBinding(report));
+        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(HootenannyConflation.class.getResourceAsStream("stats.txt")));
+        
+        String line = "";
+        
+        String lineSeparator = System.getProperty("line.separator");
+        
+        try {
+            while((line = bufferedReader.readLine()) != null){
+                report = report.concat(line + lineSeparator);
+            }
+            
+            bufferedReader.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        
+        try {
+            Thread.sleep(10000);
+        } catch (InterruptedException e1) {
+            e1.printStackTrace();
+        }
+        
+        String mimeType = "";
+        
+        OutputDefinitionType outputDefinitionType = ExecutionContextFactory.getContext().getOutputs().get(0);
+        
+        if(outputDefinitionType.getIdentifier().getStringValue().equals(CONFLATION_OUTPUT)){            
+            mimeType = outputDefinitionType.getMimeType();            
+        }else{
+            outputDefinitionType = ExecutionContextFactory.getContext().getOutputs().get(1);
+            if(outputDefinitionType.getIdentifier().getStringValue().equals(CONFLATION_OUTPUT)){            
+                mimeType = outputDefinitionType.getMimeType();            
+            }
+        }
+        
+        File resultFile = null;
+        
+        GenericFileDataWithGT genericFileDataWithGT = null;        
+        
+        if(mimeType.contains("xml")){
+            //deliver osm
+            resultFile = new File("/home/benjamin/aoi-output.osm");
+            
+            try {
+                genericFileDataWithGT = new GenericFileDataWithGT(resultFile, mimeType);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            
+        }else if(mimeType.contains("shp")){
+            //deliver zipped shape file
+            
+            GTBinZippedSHPParser parser = new GTBinZippedSHPParser();
+            
+//            resultFile = new File("D:/52n/Projekte/Laufend/Testbed 12/Conflation/aoi-output.zip");
+            resultFile = new File("/home/benjamin/aoi-output.zip");
+            
+            try {
+                GTVectorDataBinding gtVectorDataBinding = parser.parse(new FileInputStream(resultFile), "application/x-zipped-shp", null);
+                
+                genericFileDataWithGT = new GenericFileDataWithGT(gtVectorDataBinding.getPayload());
+                
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            
+        }
+        
+        result.put(CONFLATION_OUTPUT, new GenericFileDataWithGTBinding(genericFileDataWithGT));
+        result.put(CONFLATION_REPORT, new LiteralStringBinding(report));
         
         return result;
     }
@@ -48,9 +140,9 @@ public class HootenannyConflation extends AbstractAlgorithm {
     @Override
     public Class<?> getInputDataType(String id) {
         if(id.equals(INPUT1)){
-            return GTVectorDataBinding.class;
+            return GenericFileDataBinding.class;
         }else if(id.equals(INPUT2)){
-            return GTVectorDataBinding.class;
+            return GenericFileDataBinding.class;
         }else if(id.equals(CONFLATION_TYPE)){
             return LiteralStringBinding.class;
         }else if(id.equals(MATCH_THRESHOLD)){
@@ -66,9 +158,9 @@ public class HootenannyConflation extends AbstractAlgorithm {
     @Override
     public Class<?> getOutputDataType(String id) {
         if(id.equals(CONFLATION_OUTPUT)){
-            return GTVectorDataBinding.class;
+            return GenericFileDataWithGTBinding.class;
         }else if(id.equals(CONFLATION_REPORT)){
-            return PlainStringBinding.class;
+            return LiteralStringBinding.class;
         }
         return null;
     }
