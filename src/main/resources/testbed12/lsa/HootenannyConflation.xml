@@ -43,10 +43,13 @@
 				<ComplexData>
 					<Default>
 						<Format>
-							<MimeType>application/x-zipped-shp</MimeType>
+							<MimeType>text/xml</MimeType>
 						</Format>
 					</Default>
 					<Supported>
+						<Format>
+							<MimeType>text/xml</MimeType>
+						</Format>
 						<Format>
 							<MimeType>application/x-zipped-shp</MimeType>
 						</Format>
@@ -134,28 +137,18 @@
 							<MimeType>application/x-zipped-gdb</MimeType>
 							<Encoding>base64</Encoding>
 						</Format>
+						<Format>
+							<MimeType>text/xml</MimeType>
+						</Format>
 					</Supported>
 				</ComplexOutput>
 			</Output>
 			<Output>
 				<ows:Identifier>CONFLATION_REPORT</ows:Identifier>
 				<ows:Title>CONFLATION_REPORT</ows:Title>
-				<ComplexOutput>
-					<Default>
-						<Format>
-							<MimeType>application/text/plain</MimeType>
-						</Format>
-					</Default>
-					<Supported>
-						<Format>
-							<MimeType>application/text/plain</MimeType>
-						</Format>
-						<Format>
-							<MimeType>application/text/plain</MimeType>
-							<Encoding>base64</Encoding>
-						</Format>
-					</Supported>
-				</ComplexOutput>
+				<LiteralOutput>
+				<ows:DataType ows:reference="xs:string"></ows:DataType>
+				</LiteralOutput>
 			</Output>
 		</ProcessOutputs>
 	</ProcessDescription>

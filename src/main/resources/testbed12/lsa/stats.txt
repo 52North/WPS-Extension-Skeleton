@@ -1,0 +1,124 @@
+stats = (stat) OR (input map 1 stat) (input map 2 stat) (output map stat)
+Node Count	15573	72419	75747	
+Way Count	2233	6550	11697	
+Relation Count	0	80	131	
+Minimum Node ID	-15573	-87992	-93545	
+Maximum Node ID	-1	-15574	-1	
+Minimum Way ID	-2233	-8783	-32323	
+Maximum Way ID	-1	-2234	-1	
+Minimum Relation ID	9.2233720368547758e+18	-93	-780	
+Maximum Relation ID	-9.2233720368547758e+18	-1	-1	
+Total Feature Tags	3486	52370	98289	
+Total Feature Information Tags	1253	43699	83597	
+Total Feature Metadata Tags	2233	8671	14692	
+Unique Names	372	2168	2523	
+Meters of Linear Features	120921.07313503246	1435212.4631874857	1479374.7486951223	
+Meters Squared of Area Features	0	178692318.2038238	178692399.89822662	
+Meters of Highway	120921.07313503246	1246163.4723435626	1283168.7323777329	
+Highway Unique Name Count	369	1669	2021	
+Meters Squared of Buildings	0	1472501.1109928724	1472501.1109933858	
+Building Unique Name Count	0	38	38	
+Total Feature Count	703	8802	13898	
+Total Conflatable Features	696	6960	0	
+Percentage of Total Features Conflatable	99.004267425320052	79.072937968643487	0	
+Untagged Feature Count	0	0	0	
+Total Unconflatable Features	7	1842	0	
+Percentage of Total Features Unconflatable	0.99573257467994303	20.92706203135651	0	
+Number of Match Creators	3	3	3	
+Features Conflatable by: hoot::HighwayMatchCreator	696	4463	0	
+Total Conflated Features	0	0	501	
+Percentage of Total Features Conflated	0	0	3.6048352280903728	
+Total Features Marked for Review	0	0	22	
+Percentage of Total Features Marked for Review	0	0	0.15829615772053532	
+Total Number of Reviews to be Made	0	0	12	
+Total Unmatched Features	703	8802	13397	
+Percentage of Total Features Unmatched	100	100	96.39516477190962	
+POI Count	0	1421	1423	
+Conflatable POIs	0	1421	0	
+Conflated POIs	0	0	1	
+POIs Marked for Review	0	0	0	
+Number of POI Reviews to be Made	0	0	0	
+Unmatched POIs	0	1421	1422	
+Percentage of POIs Conflated	0	0	0.070274068868587489	
+Percentage of POIs Marked for Review	0	0	0	
+Percentage of Unmatched POIs	0	100	99.929725931131401	
+Highway Count	696	4463	9552	
+Conflatable Highways	696	4463	0	
+Conflated Highways	0	0	500	
+Highways Marked for Review	0	0	22	
+Number of Highway Reviews to be Made	0	0	12	
+Unmatched Highways	696	4463	9052	
+Meters of Highway Processed by Conflation	0	0	68201.496950179149	
+Percentage of Highways Conflated	0	0	5.2345058626465661	
+Percentage of Highways Marked for Review	0	0	0.23031825795644892	
+Percentage of Unmatched Highways	100	100	94.765494137353429	
+Building Count	0	1076	1076	
+Conflatable Buildings	0	1076	0	
+Conflated Buildings	0	0	0	
+Buildings Marked for Review	0	0	0	
+Number of Building Reviews to be Made	0	0	0	
+Unmatched Buildings	0	1076	1076	
+Meters Squared of Buildings Processed by Conflation	0	0	0	
+Percentage of Buildings Conflated	0	0	0	
+Percentage of Buildings Marked for Review	0	0	0	
+Percentage of Unmatched Buildings	0	100	100	
+Waterway Count	0	44	49	
+Conflatable Waterways	0	0	0	
+Conflated Waterways	0	0	0	
+Waterways Marked for Review	0	0	0	
+Number of Waterway Reviews to be Made	0	0	0	
+Unmatched Waterways	0	44	49	
+Meters of Waterway Processed by Conflation	0	0	0	
+Percentage of Waterways Conflated	0	0	0	
+Percentage of Waterways Marked for Review	0	0	0	
+Percentage of Unmatched Waterways	0	100	100	
+Longest Tag	30	255	255	
+Translated Populated Tag Percent	0.03673402152426971	0.042670413188973105	0.043185873848811375	
+Translated Populated Tag Count	4014	48716	83952	
+Translated Default Tag Count	53754	582938	966814	
+Translated Null Tag Count	51504	510027	893203	
+Building Translated Populated Tag Percent	nan	0.043544898918664789	0.043544898918664789	
+Highway Translated Populated Tag Percent	0.03673402152426971	0.044509458380372825	0.044200128011979201	
+POI Translated Populated Tag Percent	nan	0.041164486118952355	0.041101591187270504	
+Waterway Translated Populated Tag Percent	nan	0.039733969986357434	0.040036957191253462	
+Features Conflatable by: hoot::BuildingMatchCreator		1076	0	
+Features Conflatable by: hoot::PlacesPoiMatchCreator		1421	0	
+Difference Between Total Features in Output and Total Features in Inputs	4393	
+Percentage Difference Between Total Features in Output and Total Features in Inputs			46.217780115728566	
+Read Inputs Time (sec)				1.7233619689941406
+(Dubious) Read Inputs Bytes				19818062
+(Dubious) Read Inputs Bytes per Second				11499651.46995035
+Time to Calculate Stats for Input 1 (sec)				3.9874911308288574
+Time to Calculate Stats for Input 2 (sec)				18.580130815505981
+Initial Element Count				96855
+Apply Named Ops Time (sec)				5.44681715965271
+Apply Pre Ops Time (sec)				5.9604644775390625e-06
+Project to Planar Time (sec)				5.0067901611328125e-06
+Find Matches Time (sec)				7.8765130043029785
+Number of Matches Found				754
+Number of Matches Found per Second				95.727639830986888
+Number of Matches Before Whole Groups				754
+Number of Whole Groups				0
+Optimize Matches Time (sec)				1.4566490650177002
+Number of Optimized Matches				515
+Number of Matches Optimized per Second				517.62639204442689
+Create Mergers Time (sec)				0.0089669227600097656
+Apply Mergers Time (sec)				0.60945916175842285
+Mergers Applied per Second				636.63002272463211
+Apply Post Ops Time (sec)				0.81815791130065918
+Conflation Time (sec)				10.770680904388428
+Project to WGS84 Time (sec)				0.12189197540283203
+Time to Calculate Stats for Output (sec)				35.594425201416016
+(Dubious) Initial Elements Processed per Second				1248.3016203682387
+(Dubious) Final Elements Processed per Second				1128.6976862706983
+Write Output Time (sec)				1.364609956741333
+Final Element Count				87575
+Total Time Elapsed (sec)				77.589421033859253
+Bytes Read				77211746
+Bytes Written				20579332
+Number of Read Syscalls				46643
+Number of Write Syscalls				1691
+Bytes Read From Storage				34365440
+Bytes Written To Storage				0
+Cancelled Write Bytes				0
+(Dubious) Bytes Processed per Second				255422.21782208679
