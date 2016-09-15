@@ -1,34 +1,44 @@
 package testbed12.lsa;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.PipedInputStream;
+import java.io.PipedOutputStream;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.n52.wps.commons.context.ExecutionContextFactory;
+import org.apache.commons.io.FileUtils;
+import org.n52.wps.commons.WPSConfig;
 import org.n52.wps.io.data.GenericFileData;
 import org.n52.wps.io.data.GenericFileDataWithGT;
 import org.n52.wps.io.data.IData;
-import org.n52.wps.io.data.binding.complex.GTVectorDataBinding;
 import org.n52.wps.io.data.binding.complex.GenericFileDataBinding;
 import org.n52.wps.io.data.binding.complex.GenericFileDataWithGTBinding;
 import org.n52.wps.io.data.binding.literal.LiteralDoubleBinding;
 import org.n52.wps.io.data.binding.literal.LiteralIntBinding;
 import org.n52.wps.io.data.binding.literal.LiteralStringBinding;
-import org.n52.wps.io.datahandler.parser.GTBinZippedSHPParser;
 import org.n52.wps.server.AbstractAlgorithm;
 import org.n52.wps.server.ExceptionReport;
-
-import net.opengis.wps.x100.OutputDefinitionType;
+import org.n52.wps.server.grass.util.JavaProcessStreamReader;
+import org.n52.wps.testbed12.DummyAlgorithmRepository;
+import org.n52.wps.testbed12.module.Testbed12ProcessConfigModule;
+import org.n52.wps.webapp.api.ConfigurationCategory;
+import org.n52.wps.webapp.api.ConfigurationModule;
+import org.n52.wps.webapp.api.types.ConfigurationEntry;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class HootenannyConflation extends AbstractAlgorithm {
 
+    private static final Logger log = LoggerFactory.getLogger(HootenannyConflation.class);
+
     private final static String INPUT1 = "INPUT1";
+    private final static String INPUT1_TRANSLATION = "INPUT1_TRANSLATION";
     private final static String INPUT2 = "INPUT2";
     private final static String CONFLATION_TYPE = "CONFLATION_TYPE";
     private final static String MATCH_THRESHOLD = "MATCH_THRESHOLD";
@@ -36,101 +46,120 @@ public class HootenannyConflation extends AbstractAlgorithm {
     private final static String REFERENCE_LAYER = "REFERENCE_LAYER";
     private final static String CONFLATION_OUTPUT = "CONFLATION_OUTPUT";
     private final static String CONFLATION_REPORT = "CONFLATION_REPORT";
+	private final String lineSeparator = System.getProperty("line.separator");
     
+	private File statsFile;
+	
     @Override
     public Map<String, IData> run(Map<String, List<IData>> inputData) throws ExceptionReport {
         
+		ConfigurationModule configModule = WPSConfig.getInstance().getConfigurationModuleForClass(DummyAlgorithmRepository.class.getName(), ConfigurationCategory.REPOSITORY);
+    	
+		List<? extends ConfigurationEntry<?>> propertyArray = configModule.getConfigurationEntries();
+		
+		String hootenannyHome = "";
+		
+		for (ConfigurationEntry<?> property : propertyArray) {
+			if (property.getKey().equalsIgnoreCase(
+					Testbed12ProcessConfigModule.hootenannyHomeKey)) {
+				hootenannyHome = property.getValue().toString();
+			}
+		}
+		
         List<IData> input1List = inputData.get(INPUT1);
+        
+        List<IData> input2List = inputData.get(INPUT2);
+        
+        List<IData> input1_translationList = inputData.get(INPUT1_TRANSLATION);
         
         Map<String, IData> result = new HashMap<>();
         
         IData input1 = input1List.get(0);
         
-        if(!(input1 instanceof GenericFileDataBinding)){
+        IData input2 = input2List.get(0);
+        
+        if(!(input1 instanceof GenericFileDataBinding) || !(input2 instanceof GenericFileDataBinding)){
             return result;
         }
+
+        File inputFile1 = ((GenericFileDataBinding)input1).getPayload().getBaseFile(true);
         
-        List<IData> input2List = inputData.get(INPUT2);
+        File inputFile2 = ((GenericFileDataBinding)input2).getPayload().getBaseFile(true);
+
+        String input1FilenameWithoutSuffix = getStringWithoutSuffix(inputFile1.getName());
         
-        result.put(CONFLATION_OUTPUT, input1List.get(0));
+        String input1FilenameOSM = inputFile1.getParent() + File.separatorChar + input1FilenameWithoutSuffix + ".osm";
         
-        String report = "";
+        String input1FilenameSHP = inputFile1.getParent() + File.separatorChar + input1FilenameWithoutSuffix + ".shp";
         
-        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(HootenannyConflation.class.getResourceAsStream("stats.txt")));
+        String currentTimeMilis = "" + System.currentTimeMillis();
         
-        String line = "";
+        log.info("Starting conflation " + currentTimeMilis);
         
-        String lineSeparator = System.getProperty("line.separator");
+        //copy translation file to hootenanny directory if file exists
+        if(input1_translationList.size() > 0){
+        	IData input1_translation = input1_translationList.get(0);
+        	
+            if(input1_translation instanceof GenericFileDataBinding){
+            	
+            	File input1_translationFile = ((GenericFileDataBinding)input1_translation).getPayload().getBaseFile(false);
+                
+            	File destFile = new File(hootenannyHome + "/translations/" + currentTimeMilis + "Input1.py");
+                
+            	try {
+					FileUtils.copyFile(input1_translationFile, destFile);
+				} catch (IOException e) {
+					log.error("Coul not copy translation file to hootenanny directory.", e);
+				}
+                
+                String ogr2osmForInput1Command = "hoot ogr2osm " + getStringWithoutSuffix(destFile.getName()) + " " + input1FilenameOSM + " " + input1FilenameSHP;
+            	
+                executeHootenannyCommand(ogr2osmForInput1Command);  	
+            }
+        }
+        
+        //TODO handle case if second input is not osm
+        
+        //conflate
+        try {
+        	statsFile = File.createTempFile("hootStats", "txt");
+		} catch (IOException e1) {
+			log.error("Could not create temp file for storing conflation stats", e1);
+		}
+        
+        String outputFilenameOSM = inputFile1.getParent() + File.separatorChar + currentTimeMilis + "conflationOutput.osm";
+        
+        String outputFilenameSHP = getStringWithoutSuffix(outputFilenameOSM) + ".shp";
+        
+        String conflationCommand = "hoot --conflate " + input1FilenameOSM + " " + inputFile2.getAbsolutePath() + " " + outputFilenameOSM + " --stats";
+        
+        executeHootenannyCommand(conflationCommand, true);
+        
+        String osm2orgCommandForOutput = "hoot osm2shp " + outputFilenameOSM  + " " + outputFilenameSHP;
+        
+        executeHootenannyCommand(osm2orgCommandForOutput);
+        
+        //Shapefile will be split in lines, points and polygons, we just return thr lines
+        File outputFileSHPLines = new File(getStringWithoutSuffix(outputFilenameSHP) + "Lines.shp");
         
         try {
-            while((line = bufferedReader.readLine()) != null){
-                report = report.concat(line + lineSeparator);
-            }
-            
-            bufferedReader.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        
+			result.put(CONFLATION_OUTPUT, new GenericFileDataWithGTBinding(new GenericFileDataWithGT(outputFileSHPLines, "application/x-zipped-shp")));
+		} catch (IOException e1) {
+			log.error("Could not create GenericFiledData for conflation output file.");
+		}
         try {
-            Thread.sleep(10000);
-        } catch (InterruptedException e1) {
-            e1.printStackTrace();
-        }
-        
-        String mimeType = "";
-        
-        OutputDefinitionType outputDefinitionType = ExecutionContextFactory.getContext().getOutputs().get(0);
-        
-        if(outputDefinitionType.getIdentifier().getStringValue().equals(CONFLATION_OUTPUT)){            
-            mimeType = outputDefinitionType.getMimeType();            
-        }else{
-            outputDefinitionType = ExecutionContextFactory.getContext().getOutputs().get(1);
-            if(outputDefinitionType.getIdentifier().getStringValue().equals(CONFLATION_OUTPUT)){            
-                mimeType = outputDefinitionType.getMimeType();            
-            }
-        }
-        
-        File resultFile = null;
-        
-        GenericFileDataWithGT genericFileDataWithGT = null;        
-        
-        if(mimeType.contains("xml")){
-            //deliver osm
-            resultFile = new File("/home/benjamin/aoi-output.osm");
-            
-            try {
-                genericFileDataWithGT = new GenericFileDataWithGT(resultFile, mimeType);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            
-        }else if(mimeType.contains("shp")){
-            //deliver zipped shape file
-            
-            GTBinZippedSHPParser parser = new GTBinZippedSHPParser();
-            
-//            resultFile = new File("D:/52n/Projekte/Laufend/Testbed 12/Conflation/aoi-output.zip");
-            resultFile = new File("/home/benjamin/aoi-output.zip");
-            
-            try {
-                GTVectorDataBinding gtVectorDataBinding = parser.parse(new FileInputStream(resultFile), "application/x-zipped-shp", null);
-                
-                genericFileDataWithGT = new GenericFileDataWithGT(gtVectorDataBinding.getPayload());
-                
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            
-        }
-        
-        result.put(CONFLATION_OUTPUT, new GenericFileDataWithGTBinding(genericFileDataWithGT));
-        result.put(CONFLATION_REPORT, new LiteralStringBinding(report));
+			result.put(CONFLATION_REPORT, new GenericFileDataBinding(new GenericFileData(statsFile, "text/plain")));
+		} catch (IOException e) {
+			log.error("Could not create GenericFiledData for conflation statistics file.");
+		}
         
         return result;
     }
+	
+	//return a substring of the string until the first occurrence of a dot
+	private String getStringWithoutSuffix(String inputString){
+		return inputString.substring(0, inputString.indexOf("."));
+	}
 
     @Override
     public List<String> getErrors() {
@@ -140,6 +169,8 @@ public class HootenannyConflation extends AbstractAlgorithm {
     @Override
     public Class<?> getInputDataType(String id) {
         if(id.equals(INPUT1)){
+            return GenericFileDataBinding.class;
+        }else if(id.equals(INPUT1_TRANSLATION)){
             return GenericFileDataBinding.class;
         }else if(id.equals(INPUT2)){
             return GenericFileDataBinding.class;
@@ -160,9 +191,72 @@ public class HootenannyConflation extends AbstractAlgorithm {
         if(id.equals(CONFLATION_OUTPUT)){
             return GenericFileDataWithGTBinding.class;
         }else if(id.equals(CONFLATION_REPORT)){
-            return LiteralStringBinding.class;
+            return GenericFileDataBinding.class;
         }
         return null;
     }
+	
+    private void executeHootenannyCommand(String command){
+    	executeHootenannyCommand(command, false);
+    }
+    
+	private void executeHootenannyCommand(String command, boolean writeToStatsFile) {
+
+		try {
+
+			log.info("Executing Hootenanny command " + command);
+			
+			Runtime rt = Runtime.getRuntime();
+			
+			Process proc = rt.exec(command);
+			
+	        PipedOutputStream pipedOut = new PipedOutputStream();
+	        
+	        PipedInputStream pipedIn = new PipedInputStream(pipedOut);  
+			
+			// attach error stream reader
+			JavaProcessStreamReader errorStreamReader = new JavaProcessStreamReader(proc
+					.getErrorStream(), "ERROR", pipedOut);
+
+			// attach output stream reader
+			JavaProcessStreamReader outputStreamReader = new JavaProcessStreamReader(proc
+					.getInputStream(), "OUTPUT", pipedOut);
+			
+			// start them
+			errorStreamReader.start();
+			outputStreamReader.start();
+			
+			//fetch stats from console
+            String stats = "";
+            try (BufferedReader statsReader = new BufferedReader(new InputStreamReader(pipedIn));) {
+                String line = statsReader.readLine();
+
+                while (line != null) {
+                    stats = stats.concat(line + lineSeparator);
+                    line = statsReader.readLine();
+                }
+            }
+			
+			try {
+				proc.waitFor();
+			} catch (InterruptedException e1) {
+				log.error("Java process was interrupted.", e1);
+			}finally{
+				proc.destroy();
+			}
+
+			if (writeToStatsFile && !stats.equals("")) {
+
+				BufferedWriter bufWriter = new BufferedWriter(new FileWriter(statsFile));
+				bufWriter.write(stats);
+				bufWriter.flush();
+				bufWriter.close();
+			}
+			
+		} catch (IOException e) {
+			log.error("An error occured while executing the Hootenanny command " + command, e);
+//			throw new RuntimeException(e);
+		}
+	}
 
 }

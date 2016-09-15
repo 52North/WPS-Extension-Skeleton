@@ -23,6 +23,9 @@
 							<MimeType>application/x-zipped-shp</MimeType>
 						</Format>
 						<Format>
+							<MimeType>application/x-openstreetmap+xml</MimeType>
+						</Format>
+						<Format>
 							<MimeType>application/x-zipped-shp</MimeType>
 							<Encoding>base64</Encoding>
 						</Format>
@@ -36,6 +39,26 @@
 					</Supported>
 				</ComplexData>
 			</Input>
+			<Input maxOccurs="1" minOccurs="0">
+				<ows:Identifier>INPUT1_TRANSLATION</ows:Identifier>
+				<ows:Title>INPUT1_TRANSLATION</ows:Title>
+				<ows:Abstract>Translation file for cpnflation input 1</ows:Abstract>
+				<ComplexData>
+					<Default>
+						<Format>
+							<MimeType>text/x-script.phyton</MimeType>
+						</Format>
+					</Default>
+					<Supported>
+						<Format>
+							<MimeType>text/x-script.phyton</MimeType>
+						</Format>
+						<Format>
+							<MimeType>text/plain</MimeType>
+						</Format>
+					</Supported>
+				</ComplexData>
+			</Input>
 			<Input maxOccurs="1" minOccurs="1">
 				<ows:Identifier>INPUT2</ows:Identifier>
 				<ows:Title>INPUT2</ows:Title>
@@ -43,12 +66,15 @@
 				<ComplexData>
 					<Default>
 						<Format>
-							<MimeType>text/xml</MimeType>
+							<MimeType>application/x-openstreetmap+xml</MimeType>
 						</Format>
 					</Default>
 					<Supported>
 						<Format>
 							<MimeType>text/xml</MimeType>
+						</Format>
+						<Format>
+							<MimeType>application/x-openstreetmap+xml</MimeType>
 						</Format>
 						<Format>
 							<MimeType>application/x-zipped-shp</MimeType>
@@ -146,9 +172,18 @@
 			<Output>
 				<ows:Identifier>CONFLATION_REPORT</ows:Identifier>
 				<ows:Title>CONFLATION_REPORT</ows:Title>
-				<LiteralOutput>
-				<ows:DataType ows:reference="xs:string"></ows:DataType>
-				</LiteralOutput>
+				<ComplexOutput>
+					<Default>
+						<Format>
+							<MimeType>text/plain</MimeType>
+						</Format>
+					</Default>
+					<Supported>
+						<Format>
+							<MimeType>text/plain</MimeType>
+						</Format>
+					</Supported>
+				</ComplexOutput>
 			</Output>
 		</ProcessOutputs>
 	</ProcessDescription>
