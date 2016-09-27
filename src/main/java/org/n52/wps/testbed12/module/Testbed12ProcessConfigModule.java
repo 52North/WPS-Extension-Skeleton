@@ -8,7 +8,6 @@ import org.n52.wps.webapp.api.AlgorithmEntry;
 import org.n52.wps.webapp.api.ClassKnowingModule;
 import org.n52.wps.webapp.api.ConfigurationCategory;
 import org.n52.wps.webapp.api.ConfigurationKey;
-import org.n52.wps.webapp.api.ConfigurationModule;
 import org.n52.wps.webapp.api.FormatEntry;
 import org.n52.wps.webapp.api.types.ConfigurationEntry;
 import org.n52.wps.webapp.api.types.StringConfigurationEntry;
@@ -20,7 +19,7 @@ public class Testbed12ProcessConfigModule extends ClassKnowingModule {
 	public static final String hootenannyHomeKey = "hootenanny_home";
 	
 	private ConfigurationEntry<String> hootenannyHomeEntry = new StringConfigurationEntry(hootenannyHomeKey, "Hootenanny home", "Path to Hootenanny installation",
-			true, "/usr/local/hootenanny-0.2.24/");	
+			true, "/usr/local/hootenanny-0.2.26/");	
 	
 	private List<? extends ConfigurationEntry<?>> configurationEntries = Arrays.asList(hootenannyHomeEntry);
 

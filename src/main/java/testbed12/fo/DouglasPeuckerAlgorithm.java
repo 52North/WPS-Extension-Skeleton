@@ -88,8 +88,8 @@ import com.vividsolutions.jts.simplify.TopologyPreservingSimplifier;
 @Algorithm(
         version = "1.0.0")
 @AlgorithmMetadata(
-        roles = { "http://www.opengis.net/spec/wps/2.0/def/process-profile/concept", "http://www.opengis.net/spec/wps/2.0/def/process/description/documentation" },
-        hrefs = { "http://52north.github.io/wps-profileregistry/concept/generalization.html", "http://52north.github.io/wps-profileregistry/implementing/douglas-peucker.html" })
+        roles = { "http://www.opengis.net/spec/wps/2.0/def/process-profile/concept", "http://www.opengis.net/spec/wps/2.0/def/process-profile/generic", "http://www.opengis.net/spec/wps/2.0/def/process/description/documentation" },
+        hrefs = { "http://52north.github.io/wps-profileregistry/concept/generalization.html", "http://52north.github.io/wps-profileregistry/generic/line-generalization.html", "http://52north.github.io/wps-profileregistry/implementing/douglas-peucker.html" })
 public class DouglasPeuckerAlgorithm extends AbstractAnnotatedAlgorithm {
     Logger LOGGER = LoggerFactory.getLogger(DouglasPeuckerAlgorithm.class);
 

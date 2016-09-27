@@ -14,6 +14,7 @@ import java.util.Map;
 
 import org.apache.commons.io.FileUtils;
 import org.n52.wps.commons.WPSConfig;
+import org.n52.wps.commons.context.ExecutionContextFactory;
 import org.n52.wps.io.data.GenericFileData;
 import org.n52.wps.io.data.GenericFileDataWithGT;
 import org.n52.wps.io.data.IData;
@@ -32,6 +33,8 @@ import org.n52.wps.webapp.api.ConfigurationModule;
 import org.n52.wps.webapp.api.types.ConfigurationEntry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import net.opengis.wps.x100.OutputDefinitionType;
 
 public class HootenannyConflation extends AbstractAlgorithm {
 
@@ -120,9 +123,30 @@ public class HootenannyConflation extends AbstractAlgorithm {
         
         //TODO handle case if second input is not osm
         
+        
+        String statisticsFormat = "asciidoc";
+        
+        String statisticsMimeType = "text/plain";
+        
+        for (OutputDefinitionType outputDefinitionType : ExecutionContextFactory.getContext().getOutputs()) {
+			if(outputDefinitionType.getIdentifier().getStringValue().equals(CONFLATION_REPORT)){
+				statisticsMimeType = outputDefinitionType.getMimeType();
+				switch (outputDefinitionType.getMimeType()) {
+				case "application/pdf":
+			        statisticsFormat = "pdf";
+					break;
+				case "text/html":
+					statisticsFormat = "html";
+					break;
+				default:
+					break;
+				}
+			}
+		} 
+        
         //conflate
         try {
-        	statsFile = File.createTempFile("hootStats", "txt");
+        	statsFile = File.createTempFile("hootStats", "." + statisticsFormat);
 		} catch (IOException e1) {
 			log.error("Could not create temp file for storing conflation stats", e1);
 		}
@@ -131,7 +155,7 @@ public class HootenannyConflation extends AbstractAlgorithm {
         
         String outputFilenameSHP = getStringWithoutSuffix(outputFilenameOSM) + ".shp";
         
-        String conflationCommand = "hoot --conflate " + input1FilenameOSM + " " + inputFile2.getAbsolutePath() + " " + outputFilenameOSM + " --stats";
+        String conflationCommand = "hoot --conflate -D stats.output=" + getStringWithoutSuffix(statsFile.getAbsolutePath()) + " -D stats.format=" + statisticsFormat + " " + input1FilenameOSM + " " + inputFile2.getAbsolutePath() + " " + outputFilenameOSM + " --stats";
         
         executeHootenannyCommand(conflationCommand, true);
         
@@ -139,7 +163,7 @@ public class HootenannyConflation extends AbstractAlgorithm {
         
         executeHootenannyCommand(osm2orgCommandForOutput);
         
-        //Shapefile will be split in lines, points and polygons, we just return thr lines
+        //Shapefile will be split in lines, points and polygons, we just return the lines
         File outputFileSHPLines = new File(getStringWithoutSuffix(outputFilenameSHP) + "Lines.shp");
         
         try {
@@ -147,8 +171,9 @@ public class HootenannyConflation extends AbstractAlgorithm {
 		} catch (IOException e1) {
 			log.error("Could not create GenericFiledData for conflation output file.");
 		}
+        
         try {
-			result.put(CONFLATION_REPORT, new GenericFileDataBinding(new GenericFileData(statsFile, "text/plain")));
+			result.put(CONFLATION_REPORT, new GenericFileDataBinding(new GenericFileData(statsFile, statisticsMimeType)));
 		} catch (IOException e) {
 			log.error("Could not create GenericFiledData for conflation statistics file.");
 		}
@@ -220,20 +245,20 @@ public class HootenannyConflation extends AbstractAlgorithm {
 
 			// attach output stream reader
 			JavaProcessStreamReader outputStreamReader = new JavaProcessStreamReader(proc
-					.getInputStream(), "OUTPUT", pipedOut);
+					.getInputStream(), "OUTPUT");
 			
 			// start them
 			errorStreamReader.start();
 			outputStreamReader.start();
 			
 			//fetch stats from console
-            String stats = "";
-            try (BufferedReader statsReader = new BufferedReader(new InputStreamReader(pipedIn));) {
-                String line = statsReader.readLine();
+            String errors = "";
+            try (BufferedReader errorReader = new BufferedReader(new InputStreamReader(pipedIn));) {
+                String line = errorReader.readLine();
 
                 while (line != null) {
-                    stats = stats.concat(line + lineSeparator);
-                    line = statsReader.readLine();
+                    errors = errors.concat(line + lineSeparator);
+                    line = errorReader.readLine();
                 }
             }
 			
@@ -245,17 +270,13 @@ public class HootenannyConflation extends AbstractAlgorithm {
 				proc.destroy();
 			}
 
-			if (writeToStatsFile && !stats.equals("")) {
-
-				BufferedWriter bufWriter = new BufferedWriter(new FileWriter(statsFile));
-				bufWriter.write(stats);
-				bufWriter.flush();
-				bufWriter.close();
+			if (!errors.equals("")) {
+				log.error("Errors detected: " + errors);
 			}
 			
 		} catch (IOException e) {
 			log.error("An error occured while executing the Hootenanny command " + command, e);
-//			throw new RuntimeException(e);
+			throw new RuntimeException(e);
 		}
 	}
 

@@ -1,17 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<wps:ProcessDescriptions xmlns:wps="http://www.opengis.net/wps/1.0.0"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ows="http://www.opengis.net/ows/1.1"
+<wps:ProcessDescriptions xmlns:wps="http://www.opengis.net/wps/1.0.0" xmlns:xlink="http://www.w3.org/1999/xlink"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ows="http://www.opengis.net/ows/1.1"
 	xsi:schemaLocation="http://www.opengis.net/wps/1.0.0 http://schemas.opengis.net/wps/1.0.0/wpsDescribeProcess_response.xsd"
 	xml:lang="en-US" service="WPS" version="1.0.0">
 	<ProcessDescription statusSupported="true"
 		storeSupported="true" wps:processVersion="1.0.0">
 		<ows:Identifier>testbed12.lsa.HootenannyConflation</ows:Identifier>
 		<ows:Title>Hootenanny Conflation Process</ows:Title>
+      <ows:Metadata xlink:role="http://www.opengis.net/spec/wps/2.0/def/process-profile/concept" xlink:href="http://52north.github.io/wps-profileregistry/concept/conflation"/>
+      <ows:Metadata xlink:role="http://www.opengis.net/spec/wps/2.0/def/process-profile/generic" xlink:href="http://52north.github.io/wps-profileregistry/generic/conflation"/>
+      <ows:Metadata xlink:role="http://www.opengis.net/spec/wps/2.0/def/process/description/documentation" xlink:href="http://52north.github.io/wps-profileregistry/implementing/hootenanny-conflation"/>
 		<DataInputs>
 			<Input maxOccurs="1" minOccurs="1">
 				<ows:Identifier>INPUT1</ows:Identifier>
 				<ows:Title>INPUT1</ows:Title>
 				<ows:Abstract>Conflation input 1</ows:Abstract>
+        <ows:Metadata xlink:role="http://www.opengis.net/spec/wps/2.0/def/process/description/documentation" xlink:href="http://52north.github.io/wps-profileregistry/implementing/hootenanny-conflation#input1"/>
 				<ComplexData>
 					<Default>
 						<Format>
@@ -42,7 +46,8 @@
 			<Input maxOccurs="1" minOccurs="0">
 				<ows:Identifier>INPUT1_TRANSLATION</ows:Identifier>
 				<ows:Title>INPUT1_TRANSLATION</ows:Title>
-				<ows:Abstract>Translation file for cpnflation input 1</ows:Abstract>
+				<ows:Abstract>Translation file for conflation input 1</ows:Abstract>
+        <ows:Metadata xlink:role="http://www.opengis.net/spec/wps/2.0/def/process/description/documentation" xlink:href="http://52north.github.io/wps-profileregistry/implementing/hootenanny-conflation#input1_translation"/>
 				<ComplexData>
 					<Default>
 						<Format>
@@ -63,6 +68,7 @@
 				<ows:Identifier>INPUT2</ows:Identifier>
 				<ows:Title>INPUT2</ows:Title>
 				<ows:Abstract>Conflation input 2</ows:Abstract>
+        <ows:Metadata xlink:role="http://www.opengis.net/spec/wps/2.0/def/process/description/documentation" xlink:href="http://52north.github.io/wps-profileregistry/implementing/hootenanny-conflation#input2"/>
 				<ComplexData>
 					<Default>
 						<Format>
@@ -96,6 +102,7 @@
 			<Input maxOccurs="1" minOccurs="0">
 				<ows:Identifier>CONFLATION_TYPE</ows:Identifier>
 				<ows:Title>CONFLATION_TYPE</ows:Title>
+        <ows:Metadata xlink:role="http://www.opengis.net/spec/wps/2.0/def/process/description/documentation" xlink:href="http://52north.github.io/wps-profileregistry/implementing/hootenanny-conflation#conflation_type"/>
 				<LiteralData>
 					<ows:DataType ows:reference="xs:string" />
 					<ows:AllowedValues>
@@ -108,6 +115,7 @@
 				<ows:Identifier>MATCH_THRESHOLD</ows:Identifier>
 				<ows:Title>MATCH_THRESHOLD</ows:Title>
 				<ows:Abstract>The threshold for calling a relationship a match. Defaults to 0.6. The higher the value the lower the TPR, but likely also the lower the FPR.</ows:Abstract>
+        <ows:Metadata xlink:role="http://www.opengis.net/spec/wps/2.0/def/process/description/documentation" xlink:href="http://52north.github.io/wps-profileregistry/implementing/hootenanny-conflation#miss_threshold"/>
 				<LiteralData>
 					<ows:DataType ows:reference="xs:double" />
 					<ows:AnyValue />
@@ -118,6 +126,7 @@
 				<ows:Identifier>MISS_THRESHOLD</ows:Identifier>
 				<ows:Title>MISS_THRESHOLD</ows:Title>
 			    <ows:Abstract>The threshold for calling a relationship a miss. Defaults to 0.6. The higher the value the lower the TNR, but likely also the lower the FNR.</ows:Abstract>
+        <ows:Metadata xlink:role="http://www.opengis.net/spec/wps/2.0/def/process/description/documentation" xlink:href="http://52north.github.io/wps-profileregistry/implementing/hootenanny-conflation#match_threshold"/>
 			    <LiteralData>
 					<ows:DataType ows:reference="xs:double" />
 					<ows:AnyValue />
@@ -128,6 +137,7 @@
 				<ows:Identifier>REFERENCE_LAYER</ows:Identifier>
 				<ows:Title>REFERENCE_LAYER</ows:Title>
 				<ows:Abstract>The reference layer which will be dominant tags. Default is 1 and if 2 selected, layer 2 tags will be dominant with layer 1 as geometry snap layer.</ows:Abstract>
+        <ows:Metadata xlink:role="http://www.opengis.net/spec/wps/2.0/def/process/description/documentation" xlink:href="http://52north.github.io/wps-profileregistry/implementing/hootenanny-conflation#reference_layer"/>
 				<LiteralData>
 					<ows:DataType ows:reference="xs:integer" />
 					<ows:AllowedValues>
@@ -142,6 +152,7 @@
 			<Output>
 				<ows:Identifier>CONFLATION_OUTPUT</ows:Identifier>
 				<ows:Title>CONFLATION_OUTPUT</ows:Title>
+        <ows:Metadata xlink:role="http://www.opengis.net/spec/wps/2.0/def/process/description/documentation" xlink:href="http://52north.github.io/wps-profileregistry/implementing/hootenanny-conflation#conflation_output"/>
 				<ComplexOutput>
 					<Default>
 						<Format>
@@ -172,6 +183,7 @@
 			<Output>
 				<ows:Identifier>CONFLATION_REPORT</ows:Identifier>
 				<ows:Title>CONFLATION_REPORT</ows:Title>
+        <ows:Metadata xlink:role="http://www.opengis.net/spec/wps/2.0/def/process/description/documentation" xlink:href="http://52north.github.io/wps-profileregistry/implementing/hootenanny-conflation#conflation_report"/>
 				<ComplexOutput>
 					<Default>
 						<Format>
