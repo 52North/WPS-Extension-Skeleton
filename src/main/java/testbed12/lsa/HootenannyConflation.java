@@ -18,6 +18,7 @@ import org.n52.wps.commons.context.ExecutionContextFactory;
 import org.n52.wps.io.data.GenericFileData;
 import org.n52.wps.io.data.GenericFileDataWithGT;
 import org.n52.wps.io.data.IData;
+import org.n52.wps.io.data.binding.complex.GTVectorDataBinding;
 import org.n52.wps.io.data.binding.complex.GenericFileDataBinding;
 import org.n52.wps.io.data.binding.complex.GenericFileDataWithGTBinding;
 import org.n52.wps.io.data.binding.literal.LiteralDoubleBinding;
@@ -50,6 +51,9 @@ public class HootenannyConflation extends AbstractAlgorithm {
     private final static String CONFLATION_OUTPUT = "CONFLATION_OUTPUT";
     private final static String CONFLATION_REPORT = "CONFLATION_REPORT";
 	private final String lineSeparator = System.getProperty("line.separator");
+	
+    private double match_threshold = 0.161;
+    private double miss_threshold = 0.999;
     
 	private File statsFile;
 	
@@ -96,6 +100,38 @@ public class HootenannyConflation extends AbstractAlgorithm {
         String input1FilenameSHP = inputFile1.getParent() + File.separatorChar + input1FilenameWithoutSuffix + ".shp";
         
         String currentTimeMilis = "" + System.currentTimeMillis();
+        
+        List<IData> matchThresholdList = inputData.get(MATCH_THRESHOLD);
+        
+        List<IData> missThresholdList = inputData.get(MISS_THRESHOLD);
+        
+        IData matchThresholdData = null;
+        
+        if(matchThresholdList != null && matchThresholdList.size() != 0){
+        	matchThresholdData = matchThresholdList.get(0);
+        }
+        
+        IData missThresholdData = null;
+        
+        if(missThresholdList != null && missThresholdList.size() != 0){
+        	missThresholdData = missThresholdList.get(0);
+        }
+        
+		if (matchThresholdData != null) {
+			try {
+				match_threshold = ((LiteralDoubleBinding) matchThresholdData).getPayload();
+			} catch (Exception e) {
+				log.error(e.getMessage());
+			}
+		}
+
+		if (missThresholdData != null) {
+			try {
+				miss_threshold = ((LiteralDoubleBinding) missThresholdData).getPayload();
+			} catch (Exception e) {
+				log.error(e.getMessage());
+			}
+		}
         
         log.info("Starting conflation " + currentTimeMilis);
         
@@ -155,7 +191,7 @@ public class HootenannyConflation extends AbstractAlgorithm {
         
         String outputFilenameSHP = getStringWithoutSuffix(outputFilenameOSM) + ".shp";
         
-        String conflationCommand = "hoot --conflate -D stats.output=" + getStringWithoutSuffix(statsFile.getAbsolutePath()) + " -D stats.format=" + statisticsFormat + " " + input1FilenameOSM + " " + inputFile2.getAbsolutePath() + " " + outputFilenameOSM + " --stats";
+        String conflationCommand = "hoot --conflate -D highway.match.threshold=" + match_threshold + " -D highway.miss.threshold=" + miss_threshold + " -D stats.output=" + getStringWithoutSuffix(statsFile.getAbsolutePath()) + " -D stats.format=" + statisticsFormat + " " + input1FilenameOSM + " " + inputFile2.getAbsolutePath() + " " + outputFilenameOSM + " --stats";
         
         executeHootenannyCommand(conflationCommand, true);
         
@@ -167,7 +203,7 @@ public class HootenannyConflation extends AbstractAlgorithm {
         File outputFileSHPLines = new File(getStringWithoutSuffix(outputFilenameSHP) + "Lines.shp");
         
         try {
-			result.put(CONFLATION_OUTPUT, new GenericFileDataWithGTBinding(new GenericFileDataWithGT(outputFileSHPLines, "application/x-zipped-shp")));
+			result.put(CONFLATION_OUTPUT, new GenericFileDataWithGT(outputFileSHPLines, "application/x-zipped-shp").getAsGTVectorDataBinding());
 		} catch (IOException e1) {
 			log.error("Could not create GenericFiledData for conflation output file.");
 		}
@@ -214,7 +250,7 @@ public class HootenannyConflation extends AbstractAlgorithm {
     @Override
     public Class<?> getOutputDataType(String id) {
         if(id.equals(CONFLATION_OUTPUT)){
-            return GenericFileDataWithGTBinding.class;
+            return GTVectorDataBinding.class;
         }else if(id.equals(CONFLATION_REPORT)){
             return GenericFileDataBinding.class;
         }

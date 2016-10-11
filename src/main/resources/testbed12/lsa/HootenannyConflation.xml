@@ -171,11 +171,11 @@
 							<MimeType>application/x-zipped-gdb</MimeType>
 						</Format>
 						<Format>
-							<MimeType>application/x-zipped-gdb</MimeType>
-							<Encoding>base64</Encoding>
+							<MimeType>text/xml</MimeType>
+							<Schema>http://schemas.opengis.net/gml/3.1.1/base/feature.xsd</Schema>
 						</Format>
 						<Format>
-							<MimeType>text/xml</MimeType>
+							<MimeType>application/vnd.geo+json</MimeType>
 						</Format>
 					</Supported>
 				</ComplexOutput>
