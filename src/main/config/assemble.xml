@@ -1,0 +1,14 @@
+<assembly>
+        <id>binaries</id>
+        <formats>
+                <format>dir</format>
+                <format>zip</format>
+                <format>tar.gz</format>
+        </formats>
+        <includeBaseDirectory>false</includeBaseDirectory>
+        <dependencySets>
+                <dependencySet>
+                        <outputDirectory>deploy-to-wps</outputDirectory>
+                </dependencySet>
+        </dependencySets>
+</assembly>
