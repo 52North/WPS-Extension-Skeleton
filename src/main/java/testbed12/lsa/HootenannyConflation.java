@@ -1,18 +1,6 @@
 package testbed12.lsa;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PipedInputStream;
-import java.io.PipedOutputStream;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
-import org.apache.commons.io.FileUtils;
 import org.n52.wps.commons.WPSConfig;
 import org.n52.wps.commons.context.ExecutionContextFactory;
 import org.n52.wps.io.data.GenericFileData;
@@ -20,7 +8,7 @@ import org.n52.wps.io.data.GenericFileDataWithGT;
 import org.n52.wps.io.data.IData;
 import org.n52.wps.io.data.binding.complex.GTVectorDataBinding;
 import org.n52.wps.io.data.binding.complex.GenericFileDataBinding;
-import org.n52.wps.io.data.binding.complex.GenericFileDataWithGTBinding;
+import org.n52.wps.io.data.binding.complex.GenericXMLDataBinding;
 import org.n52.wps.io.data.binding.literal.LiteralDoubleBinding;
 import org.n52.wps.io.data.binding.literal.LiteralIntBinding;
 import org.n52.wps.io.data.binding.literal.LiteralStringBinding;
@@ -32,12 +20,39 @@ import org.n52.wps.testbed12.module.Testbed12ProcessConfigModule;
 import org.n52.wps.webapp.api.ConfigurationCategory;
 import org.n52.wps.webapp.api.ConfigurationModule;
 import org.n52.wps.webapp.api.types.ConfigurationEntry;
+
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PipedInputStream;
+import java.io.PipedOutputStream;
+import java.io.StringReader;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.xml.parsers.ParserConfigurationException;
+
+import org.apache.commons.io.FileUtils;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+
 import net.opengis.wps.x100.OutputDefinitionType;
+
 import org.apache.xmlbeans.XmlObject;
-import org.n52.wps.io.data.binding.complex.GenericXMLDataBinding;
+
+import org.w3c.dom.Document;
+import org.w3c.dom.Node;
+
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
+
 import testbed12.fo.util.DQUtils;
 import testbed12.fo.util.DQ_AbsoluteExternalPositionalAccuracy;
 
@@ -86,17 +101,64 @@ public class HootenannyConflation extends AbstractAlgorithm {
         List<IData> input1_translationList = inputData.get(INPUT1_TRANSLATION);
 
         List<IData> input1_dataqualityList = inputData.get(INPUT1_DATA_QUALITY);
-        
+
         List<IData> input2_dataqualityList = inputData.get(INPUT2_DATA_QUALITY);
-        
+
         // get input1 data quality:
         IData input1_dataquality = input1_dataqualityList.get(0);
-        DQUtils dqutils_input1 = new DQUtils(new DQ_AbsoluteExternalPositionalAccuracy((XmlObject) input1_dataquality.getPayload()));
-        
-        // get input2 data quality:
         IData input2_dataquality = input2_dataqualityList.get(0);
-        DQUtils dqutils_input2 = new DQUtils(new DQ_AbsoluteExternalPositionalAccuracy((XmlObject) input2_dataquality.getPayload()));
-
+        
+        // check if input1_data_quality and input2_data_quality are of type
+        // <wps:Result> or <DQ_AbsoluteExternalPositionalAccuracy>:
+        DQUtils dqutils_input1 = null;
+        DQUtils dqutils_input2 = null;
+        try {
+            // input 1 dq:
+            DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+            InputSource is = new InputSource();
+            is.setCharacterStream(new StringReader(((XmlObject)input1_dataquality.getPayload()).toString()));
+            Document document = (Document) builder.parse(is);
+            Node root = document.getDocumentElement();
+            switch (root.getNodeName()) {
+                case "DQ_AbsoluteExternalPositionalAccuracy":
+                    dqutils_input1 = new DQUtils(new DQ_AbsoluteExternalPositionalAccuracy((XmlObject) input1_dataquality.getPayload()));
+                    break;
+                case "wps:Result":
+                    dqutils_input1 = new DQUtils((XmlObject) input1_dataquality.getPayload());
+                    break;
+                default:
+                    log.error("INPUT1_DATA_QUALITY must be of type <result> or <DQ_AbsoluteExternalPositionalAccuracy>, but is: " + root.getNodeName());
+                    throw new RuntimeException("INPUT1_DATA_QUALITY must be of type <wresult> or <DQ_AbsoluteExternalPositionalAccuracy>, but is: " + root.getNodeName());
+            }
+            
+            // input 2 dq:
+            builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+            is = new InputSource();
+            is.setCharacterStream(new StringReader(((XmlObject) input2_dataquality.getPayload()).toString()));
+            document = (Document) builder.parse(is);
+            root = document.getDocumentElement();
+            switch (root.getNodeName()) {
+                case "DQ_AbsoluteExternalPositionalAccuracy":
+                    dqutils_input2 = new DQUtils(new DQ_AbsoluteExternalPositionalAccuracy((XmlObject) input2_dataquality.getPayload()));
+                    break;
+                case "wps:Result":
+                    dqutils_input2 = new DQUtils((XmlObject) input2_dataquality.getPayload());
+                    break;
+                default:
+                    log.error("INPUT2_DATA_QUALITY must be of type <result> or <DQ_AbsoluteExternalPositionalAccuracy>, but is: " + root.getNodeName());
+                    throw new RuntimeException("INPUT2_DATA_QUALITY must be of type <result> or <DQ_AbsoluteExternalPositionalAccuracy>, but is: " + root.getNodeName());
+            }
+        } catch (ParserConfigurationException pce) {
+            log.error("An error occured while parsing an INPUT_DATA_QUALITY: Parser not configurated XML", pce);
+            throw new RuntimeException(pce);
+        } catch (SAXException saxe) {
+            log.error("An error occured while parsing an INPUT_DATA_QUALITY: Input is no valid XML", saxe);
+            throw new RuntimeException(saxe);
+        } catch (IOException ioe) {
+            log.error("An error occured while parsing an INPUT_DATA_QUALITY: Error", ioe);
+            throw new RuntimeException(ioe);
+        }
+        
         Map<String, IData> result = new HashMap<>();
 
         IData input1 = input1List.get(0);
@@ -174,9 +236,7 @@ public class HootenannyConflation extends AbstractAlgorithm {
                 executeHootenannyCommand(ogr2osmForInput1Command);
             }
         }
-        
-        
-        //TODO handle case if second input is not osm
+        // TODO handle case if second input is not osm
         String statisticsFormat = "asciidoc";
 
         String statisticsMimeType = "text/plain";
@@ -196,24 +256,22 @@ public class HootenannyConflation extends AbstractAlgorithm {
                 }
             }
         }
-
-        //conflate
+        // conflate
         try {
             statsFile = File.createTempFile("hootStats", "." + statisticsFormat);
         } catch (IOException e1) {
             log.error("Could not create temp file for storing conflation stats", e1);
         }
-
         String outputFilenameOSM = inputFile1.getParent() + File.separatorChar + currentTimeMilis + "conflationOutput.osm";
 
         String outputFilenameSHP = getStringWithoutSuffix(outputFilenameOSM) + ".shp";
-        
+
         String conflationCommand = "";
         if (dqutils_input1.getMeanDisplacement() < dqutils_input2.getMeanDisplacement())
             conflationCommand = "hoot --conflate -D highway.match.threshold=" + match_threshold + " -D highway.miss.threshold=" + miss_threshold + " -D stats.output=" + getStringWithoutSuffix(statsFile.getAbsolutePath()) + " -D stats.format=" + statisticsFormat + " " + input1FilenameOSM + " " + inputFile2.getAbsolutePath() + " " + outputFilenameOSM + " --stats";
         else
             conflationCommand = "hoot --conflate -D highway.match.threshold=" + match_threshold + " -D highway.miss.threshold=" + miss_threshold + " -D stats.output=" + getStringWithoutSuffix(statsFile.getAbsolutePath()) + " -D stats.format=" + statisticsFormat + " " + inputFile2.getAbsolutePath() + " " + input1FilenameOSM + " " + outputFilenameOSM + " --stats";
-        
+
         executeHootenannyCommand(conflationCommand, true);
 
         String osm2orgCommandForOutput = "hoot osm2shp " + outputFilenameOSM + " " + outputFilenameSHP;
@@ -234,7 +292,6 @@ public class HootenannyConflation extends AbstractAlgorithm {
         } catch (IOException e) {
             log.error("Could not create GenericFiledData for conflation statistics file.");
         }
-
         return result;
     }
 

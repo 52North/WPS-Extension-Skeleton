@@ -16,16 +16,20 @@
  */
 package testbed12.fo.util;
 
-import java.io.File;
+
 import java.io.StringReader;
+
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathFactory;
+
 import org.apache.xmlbeans.XmlObject;
+
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
+
 import org.xml.sax.InputSource;
 
 /**
