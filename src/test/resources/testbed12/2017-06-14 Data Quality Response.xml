@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Copyright 2016 52°North Initiative for Geospatial Open Source
+    Software GmbH
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+
+-->
+<wps:Result xmlns:wps="http://www.opengis.net/wps/2.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.opengis.net/wps/2.0 http://schemas.opengis.net/wps/2.0/wps.xsd">
+  <wps:JobID>a1dbf17c-35f5-4643-97b1-8357042a845f</wps:JobID>
+  <wps:Output id="outputMetadataChunk">
+    <wps:Data mimeType="text/xml">
+      <DQ_AbsoluteExternalPositionalAccuracy>
+        <nameOfMeasure>
+          <CharacterString>Test of accuracy of the target data against an authoritative reference</CharacterString>
+        </nameOfMeasure>
+        <evaluationMethodType>
+          <DQ_EvaluationMethodTypeCode codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelist.xml#EvaluationMethodTypeCode" codeListValue="directExternal">Direct external</DQ_EvaluationMethodTypeCode>
+        </evaluationMethodType>
+        <dateTime>
+          <DateTime>2006-11-10T00:00:00</DateTime>
+        </dateTime>
+        <result>
+          <DQ_ConformanceResult>
+            <specification>
+              <CI_Citation>
+                <title>
+                  <CharacterString>Accuracy of position test</CharacterString>
+                </title>
+                <date>
+                  <CI_Date>
+                    <date>
+                      <Date>2017-06-14</Date>
+                    </date>
+                    <dateType>
+                      <CI_DateTypeCode codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelist.xml#CI_DateTypeCode" codeListValue="creation">creation</CI_DateTypeCode>
+                    </dateType>
+                  </CI_Date>
+                </date>
+              </CI_Citation>
+            </specification>
+            <explanation>
+              <CharacterString>The mean displacement from the authoritative data is 28.552085167979794</CharacterString>
+            </explanation>
+            <pass>
+              <Boolean>0</Boolean>
+            </pass>
+          </DQ_ConformanceResult>
+        </result>
+      </DQ_AbsoluteExternalPositionalAccuracy>
+    </wps:Data>
+  </wps:Output>
+</wps:Result>

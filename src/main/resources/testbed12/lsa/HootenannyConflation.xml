@@ -64,6 +64,25 @@
 					</Supported>
 				</ComplexData>
 			</Input>
+                        <Input minOccurs="1" maxOccurs="1">
+				<ows:Identifier>INPUT1_DATA_QUALITY</ows:Identifier>
+				<ows:Title>INPUT1_DATA_QUALITY</ows:Title>
+                                <ows:Abstract>DQ_AbsoluteExternalPositionalAccuracy object for input 1 as XML</ows:Abstract>
+                                <ComplexData>
+                                        <Default>
+                                                <Format>
+                                                        <MimeType>text/xml</MimeType>
+                                                        <Encoding>UTF-8</Encoding>
+                                                </Format>
+                                        </Default>
+                                        <Supported>
+                                                <Format>
+                                                        <MimeType>text/plain</MimeType>
+                                                        <Encoding>UTF-8</Encoding>
+                                                </Format>
+                                        </Supported>
+				</ComplexData>
+			</Input>
 			<Input maxOccurs="1" minOccurs="1">
 				<ows:Identifier>INPUT2</ows:Identifier>
 				<ows:Title>INPUT2</ows:Title>
@@ -97,6 +116,25 @@
 							<Encoding>base64</Encoding>
 						</Format>
 					</Supported>
+				</ComplexData>
+			</Input>
+                        <Input minOccurs="1" maxOccurs="1">
+				<ows:Identifier>INPUT2_DATA_QUALITY</ows:Identifier>
+				<ows:Title>INPUT2_DATA_QUALITY</ows:Title>
+                                <ows:Abstract>DQ_AbsoluteExternalPositionalAccuracy object for input 2 as XML</ows:Abstract>
+				<ComplexData>
+                                        <Default>
+                                                <Format>
+                                                        <MimeType>text/xml</MimeType>
+                                                        <Encoding>UTF-8</Encoding>
+                                                </Format>
+                                        </Default>
+                                        <Supported>
+                                                <Format>
+                                                        <MimeType>text/plain</MimeType>
+                                                        <Encoding>UTF-8</Encoding>
+                                                </Format>
+                                        </Supported>
 				</ComplexData>
 			</Input>
 			<Input maxOccurs="1" minOccurs="0">

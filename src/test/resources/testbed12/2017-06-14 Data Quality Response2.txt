@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wps:Result xmlns:wps="http://www.opengis.net/wps/2.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.opengis.net/wps/2.0 http://schemas.opengis.net/wps/2.0/wps.xsd">
+  <wps:JobID>4f454ec7-3837-4db3-8bc3-32724638ab11</wps:JobID>
+  <wps:Output id="outputMetadataChunk">
+    <wps:Data mimeType="text/xml">
+      <DQ_AbsoluteExternalPositionalAccuracy>
+        <nameOfMeasure>
+          <CharacterString>Test of accuracy of the target data against an authoritative reference</CharacterString>
+        </nameOfMeasure>
+        <evaluationMethodType>
+          <DQ_EvaluationMethodTypeCode codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelist.xml#EvaluationMethodTypeCode" codeListValue="directExternal">Direct external</DQ_EvaluationMethodTypeCode>
+        </evaluationMethodType>
+        <dateTime>
+          <DateTime>2006-11-10T00:00:00</DateTime>
+        </dateTime>
+        <result>
+          <DQ_ConformanceResult>
+            <specification>
+              <CI_Citation>
+                <title>
+                  <CharacterString>Accuracy of position test</CharacterString>
+                </title>
+                <date>
+                  <CI_Date>
+                    <date>
+                      <Date>2017-06-14</Date>
+                    </date>
+                    <dateType>
+                      <CI_DateTypeCode codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelist.xml#CI_DateTypeCode" codeListValue="creation">creation</CI_DateTypeCode>
+                    </dateType>
+                  </CI_Date>
+                </date>
+              </CI_Citation>
+            </specification>
+            <explanation>
+              <CharacterString>The mean displacement from the authoritative data is 9.485969554370216</CharacterString>
+            </explanation>
+            <pass>
+              <Boolean>1</Boolean>
+            </pass>
+          </DQ_ConformanceResult>
+        </result>
+      </DQ_AbsoluteExternalPositionalAccuracy>
+    </wps:Data>
+  </wps:Output>
+</wps:Result>
