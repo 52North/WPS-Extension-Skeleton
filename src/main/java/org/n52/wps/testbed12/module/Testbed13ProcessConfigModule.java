@@ -3,7 +3,7 @@ package org.n52.wps.testbed12.module;
 import java.util.Arrays;
 import java.util.List;
 
-import org.n52.wps.testbed12.DummyAlgorithmRepository;
+import org.n52.wps.testbed13.DummyAlgorithmRepository;
 import org.n52.wps.webapp.api.AlgorithmEntry;
 import org.n52.wps.webapp.api.ClassKnowingModule;
 import org.n52.wps.webapp.api.ConfigurationCategory;
@@ -12,14 +12,14 @@ import org.n52.wps.webapp.api.FormatEntry;
 import org.n52.wps.webapp.api.types.ConfigurationEntry;
 import org.n52.wps.webapp.api.types.StringConfigurationEntry;
 
-public class Testbed12ProcessConfigModule extends ClassKnowingModule {
+public class Testbed13ProcessConfigModule extends ClassKnowingModule {
 
 	private boolean active = true;
 
 	public static final String hootenannyHomeKey = "hootenanny_home";
 	
 	private ConfigurationEntry<String> hootenannyHomeEntry = new StringConfigurationEntry(hootenannyHomeKey, "Hootenanny home", "Path to Hootenanny installation",
-			true, "/usr/local/hootenanny-0.2.26/");	
+			true, "/usr/local/hootenanny-0.2.26/");
 	
 	private List<? extends ConfigurationEntry<?>> configurationEntries = Arrays.asList(hootenannyHomeEntry);
 
@@ -27,7 +27,7 @@ public class Testbed12ProcessConfigModule extends ClassKnowingModule {
 	
 	@Override
 	public String getModuleName() {
-		return "Testbed-12 processes config module.";
+		return "Testbed-13 processes config module.";
 	}
 
 	@Override

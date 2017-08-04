@@ -1,4 +1,4 @@
-package testbed12.lsa;
+package testbed13.dsi;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -27,8 +27,8 @@ import org.n52.wps.io.data.binding.literal.LiteralStringBinding;
 import org.n52.wps.server.AbstractAlgorithm;
 import org.n52.wps.server.ExceptionReport;
 import org.n52.wps.server.grass.util.JavaProcessStreamReader;
-import org.n52.wps.testbed12.DummyAlgorithmRepository;
-import org.n52.wps.testbed12.module.Testbed12ProcessConfigModule;
+import org.n52.wps.testbed12.module.Testbed13ProcessConfigModule;
+import org.n52.wps.testbed13.DummyAlgorithmRepository;
 import org.n52.wps.webapp.api.ConfigurationCategory;
 import org.n52.wps.webapp.api.ConfigurationModule;
 import org.n52.wps.webapp.api.types.ConfigurationEntry;
@@ -36,10 +36,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import net.opengis.wps.x100.OutputDefinitionType;
+import testbed13.dsi.util.DQUtils;
+import testbed13.dsi.util.DQ_AbsoluteExternalPositionalAccuracy;
+
 import org.apache.xmlbeans.XmlObject;
 import org.n52.wps.io.data.binding.complex.GenericXMLDataBinding;
-import testbed12.fo.util.DQUtils;
-import testbed12.fo.util.DQ_AbsoluteExternalPositionalAccuracy;
 
 public class HootenannyConflation extends AbstractAlgorithm {
 
@@ -53,7 +54,6 @@ public class HootenannyConflation extends AbstractAlgorithm {
     private final static String CONFLATION_TYPE = "CONFLATION_TYPE";
     private final static String MATCH_THRESHOLD = "MATCH_THRESHOLD";
     private final static String MISS_THRESHOLD = "MISS_THRESHOLD";
-    private final static String REFERENCE_LAYER = "REFERENCE_LAYER";
     private final static String CONFLATION_OUTPUT = "CONFLATION_OUTPUT";
     private final static String CONFLATION_REPORT = "CONFLATION_REPORT";
     private final String lineSeparator = System.getProperty("line.separator");
@@ -74,7 +74,7 @@ public class HootenannyConflation extends AbstractAlgorithm {
 
         for (ConfigurationEntry<?> property : propertyArray) {
             if (property.getKey().equalsIgnoreCase(
-                    Testbed12ProcessConfigModule.hootenannyHomeKey)) {
+                    Testbed13ProcessConfigModule.hootenannyHomeKey)) {
                 hootenannyHome = property.getValue().toString();
             }
         }
@@ -88,14 +88,6 @@ public class HootenannyConflation extends AbstractAlgorithm {
         List<IData> input1_dataqualityList = inputData.get(INPUT1_DATA_QUALITY);
         
         List<IData> input2_dataqualityList = inputData.get(INPUT2_DATA_QUALITY);
-        
-        // get input1 data quality:
-        IData input1_dataquality = input1_dataqualityList.get(0);
-        DQUtils dqutils_input1 = new DQUtils(new DQ_AbsoluteExternalPositionalAccuracy((XmlObject) input1_dataquality.getPayload()));
-        
-        // get input2 data quality:
-        IData input2_dataquality = input2_dataqualityList.get(0);
-        DQUtils dqutils_input2 = new DQUtils(new DQ_AbsoluteExternalPositionalAccuracy((XmlObject) input2_dataquality.getPayload()));
 
         Map<String, IData> result = new HashMap<>();
 
@@ -110,6 +102,14 @@ public class HootenannyConflation extends AbstractAlgorithm {
         File inputFile1 = ((GenericFileDataBinding) input1).getPayload().getBaseFile(true);
 
         File inputFile2 = ((GenericFileDataBinding) input2).getPayload().getBaseFile(true);
+        
+        // get input1 data quality:
+        IData input1_dataquality = input1_dataqualityList.get(0);
+        DQUtils dqutils_input1 = new DQUtils(new DQ_AbsoluteExternalPositionalAccuracy((XmlObject) input1_dataquality.getPayload()));
+        
+        // get input2 data quality:
+        IData input2_dataquality = input2_dataqualityList.get(0);
+        DQUtils dqutils_input2 = new DQUtils(new DQ_AbsoluteExternalPositionalAccuracy((XmlObject) input2_dataquality.getPayload()));
 
         String input1FilenameWithoutSuffix = getStringWithoutSuffix(inputFile1.getName());
 
@@ -209,10 +209,13 @@ public class HootenannyConflation extends AbstractAlgorithm {
         String outputFilenameSHP = getStringWithoutSuffix(outputFilenameOSM) + ".shp";
         
         String conflationCommand = "";
-        if (dqutils_input1.getMeanDisplacement() < dqutils_input2.getMeanDisplacement())
+        
+        if (dqutils_input1.getMeanDisplacement() < dqutils_input2.getMeanDisplacement()){
             conflationCommand = "hoot --conflate -D highway.match.threshold=" + match_threshold + " -D highway.miss.threshold=" + miss_threshold + " -D stats.output=" + getStringWithoutSuffix(statsFile.getAbsolutePath()) + " -D stats.format=" + statisticsFormat + " " + input1FilenameOSM + " " + inputFile2.getAbsolutePath() + " " + outputFilenameOSM + " --stats";
-        else
+        }
+        else {
             conflationCommand = "hoot --conflate -D highway.match.threshold=" + match_threshold + " -D highway.miss.threshold=" + miss_threshold + " -D stats.output=" + getStringWithoutSuffix(statsFile.getAbsolutePath()) + " -D stats.format=" + statisticsFormat + " " + inputFile2.getAbsolutePath() + " " + input1FilenameOSM + " " + outputFilenameOSM + " --stats";
+        }
         
         executeHootenannyCommand(conflationCommand, true);
 
@@ -266,8 +269,6 @@ public class HootenannyConflation extends AbstractAlgorithm {
             return LiteralDoubleBinding.class;
         } else if (id.equals(MISS_THRESHOLD)) {
             return LiteralDoubleBinding.class;
-        } else if (id.equals(REFERENCE_LAYER)) {
-            return LiteralIntBinding.class;
         }
         return null;
     }

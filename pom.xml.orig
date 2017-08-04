@@ -8,7 +8,7 @@
 	</parent>
 
 	<groupId>org.n52.wps-extension</groupId>
-	<artifactId>testbed13-processes</artifactId>
+	<artifactId>testbed12-processes</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 
 	<inceptionYear>2016</inceptionYear>
@@ -114,11 +114,28 @@
 			<url>http://52north.org/maven/repo/releases/</url>
 		</repository>
 	</repositories>
+<<<<<<< HEAD
+=======
 
+>>>>>>> master
 	<build>
 		<pluginManagement>
 			<plugins>
 				<plugin>
+<<<<<<< HEAD
+					<artifactId>maven-compiler-plugin</artifactId>
+					<version>3.1</version>
+					<configuration>
+						<source>${java-version}</source>
+						<target>${java-version}</target>
+						<compilerArgument>-Xlint:all</compilerArgument>
+						<showWarnings>true</showWarnings>
+						<showDeprecation>true</showDeprecation>
+					</configuration>
+				</plugin>
+			</plugins>
+		</pluginManagement>
+=======
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-compiler-plugin</artifactId>
 					<configuration>
@@ -153,5 +170,6 @@
 				</executions>
 			</plugin>
 		</plugins>
+>>>>>>> master
 	</build>
 </project>

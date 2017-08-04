@@ -31,8 +31,9 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import testbed12.fo.util.DQUtils;
-import testbed12.fo.util.DQ_AbsoluteExternalPositionalAccuracy;
+
+import testbed13.dsi.util.DQUtils;
+import testbed13.dsi.util.DQ_AbsoluteExternalPositionalAccuracy;
 
 /**
  *
@@ -55,7 +56,7 @@ public class HootenannyInputTest {
     @Test
     public void testParsing() {
         String testFilePath = projectRoot
-                + "\\WPS-Extension-Skeleton\\src\\test\\resources\\testbed12\\2017-06-14 Data Quality Response.xml";
+                + "\\WPS-Extension-Skeleton\\src\\test\\resources\\testbed13\\2017-06-14 Data Quality Response.xml";
         XmlObject obj = null;
         try {
             testFilePath = URLDecoder.decode(testFilePath, "UTF-8");
@@ -83,7 +84,7 @@ public class HootenannyInputTest {
     @Test
     public void testParsing2() {
         String testFilePath = projectRoot
-                + "\\WPS-Extension-Skeleton\\src\\test\\resources\\testbed12\\2017-06-14 Data Quality Response2.txt";
+                + "\\WPS-Extension-Skeleton\\src\\test\\resources\\testbed13\\2017-06-14 Data Quality Response2.txt";
 
         XmlObject obj = null;
         try {
@@ -111,7 +112,7 @@ public class HootenannyInputTest {
     @Test
     public void testParsing3() {
         String testFilePath = projectRoot
-                + "\\WPS-Extension-Skeleton\\src\\test\\resources\\testbed12\\2017-06-14 Data Quality Object.xml";
+                + "\\WPS-Extension-Skeleton\\src\\test\\resources\\testbed13\\2017-06-14 Data Quality Object.xml";
 
         XmlObject obj = null;
         try {

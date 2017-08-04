@@ -31,26 +31,26 @@
 						encoding="base64" />
 				</wps:ComplexData>
 			</wps:Input>
-                        <wps:Input minOccurs="1" maxOccurs="1">
-                            <ows:Title>Data Quality Input 1</ows:Title>
-                            <ows:Identifier>INPUT1_DATA_QUALITY</ows:Identifier>
-                            <wps:ComplexData>
-                                <wps:Format default="true" mimeType="text/xml"/>
-                                <wps:Format mimeType="text/xml" encoding="UTF-8"/>
-                                <wps:Format miemType="text/plain"/>
-                                <wps:Format miemType="text/plain" encoding="UTF-8"/>
-                            </wps:ComplexData>
-                        </wps:Input>
-                        <wps:Input minOccurs="1" maxOccurs="1">
-                            <ows:Title>Data Quality Input 2</ows:Title>
-                            <ows:Identifier>INPUT2_DATA_QUALITY</ows:Identifier>
-                            <wps:ComplexData>
-                                <wps:Format default="true" mimeType="text/xml"/>
-                                <wps:Format mimeType="text/xml" encoding="UTF-8"/>
-                                <wps:Format miemType="text/plain"/>
-                                <wps:Format miemType="text/plain" encoding="UTF-8"/>
-                            </wps:ComplexData>
-                        </wps:Input>
+			<wps:Input minOccurs="1" maxOccurs="1">
+				<ows:Title>Data Quality Input 1</ows:Title>
+				<ows:Identifier>INPUT1_DATA_QUALITY</ows:Identifier>
+				<wps:ComplexData>
+					<wps:Format default="true" mimeType="text/xml" />
+					<wps:Format mimeType="text/xml" encoding="UTF-8" />
+					<wps:Format mimeType="text/plain" />
+					<wps:Format mimeType="text/plain" encoding="UTF-8" />
+				</wps:ComplexData>
+			</wps:Input>
+			<wps:Input minOccurs="1" maxOccurs="1">
+				<ows:Title>Data Quality Input 2</ows:Title>
+				<ows:Identifier>INPUT2_DATA_QUALITY</ows:Identifier>
+				<wps:ComplexData>
+					<wps:Format default="true" mimeType="text/xml" />
+					<wps:Format mimeType="text/xml" encoding="UTF-8" />
+					<wps:Format mimeType="text/plain" />
+					<wps:Format mimeType="text/plain" encoding="UTF-8" />
+				</wps:ComplexData>
+			</wps:Input>
 			<wps:Input minOccurs="1" maxOccurs="1">
 				<ows:Title>CONFLATION_TYPE</ows:Title>
 				<ows:Identifier>CONFLATION_TYPE</ows:Identifier>
@@ -74,7 +74,7 @@
 					<wps:Format default="true" mimeType="text/plain" />
 					<wps:Format mimeType="text/xml" />
 					<LiteralDataDomain>
-					    <ows:AnyValue/>
+						<ows:AnyValue />
 						<ows:DataType ows:reference="xs:double" />
 						<ows:DefaultValue>0.6</ows:DefaultValue>
 					</LiteralDataDomain>
