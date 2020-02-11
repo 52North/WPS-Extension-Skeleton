@@ -73,7 +73,7 @@
 		<repository>
 			<id>n52-releases</id>
 			<name>n52-releases</name>
-			<url>http://52north.org/maven/repo/releases/</url>
+			<url>https://52north.org/maven/repo/releases/</url>
 		</repository>
 	</repositories>
 </project>
